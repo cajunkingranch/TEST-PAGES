@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NySa FloW AI — Design Gallery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #C9A84C;
+      --gold-dim: rgba(201,168,76,0.25);
+      --gold-faint: rgba(201,168,76,0.08);
+      --rose: #D4A0A0;
+      --bg: #0A0A0A;
+      --surface: rgba(255,255,255,0.04);
+      --surface-hover: rgba(255,255,255,0.07);
+      --text: #E8E0D0;
+      --muted: rgba(232,224,208,0.45);
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+    }
+
+    body {
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(201,168,76,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 100%, rgba(212,160,160,0.05) 0%, transparent 60%);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 24px 100px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 72px;
+    }
+
+    .eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.8;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(40px, 7vw, 68px);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    h1 span {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      max-width: 400px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    .divider {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 32px auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      display: block;
+      text-decoration: none;
+      background: var(--surface);
+      border: 1px solid var(--gold-dim);
+      border-radius: 16px;
+      padding: 32px 28px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: background 0.4s ease, border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,0.06) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .card:hover {
+      background: var(--surface-hover);
+      border-color: rgba(201,168,76,0.5);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(201,168,76,0.06);
+    }
+
+    .card:hover::before { opacity: 1; }
+
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 20px;
+      opacity: 0.7;
+    }
+
+    .card-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.7;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: 24px;
+      color: var(--text);
+      margin-bottom: 10px;
+      letter-spacing: 0.01em;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .card-arrow {
+      position: absolute;
+      bottom: 28px;
+      right: 28px;
+      color: var(--gold);
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      font-size: 18px;
+    }
+
+    .card:hover .card-arrow {
+      opacity: 0.7;
+      transform: translate(2px, -2px);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 80px;
+      padding-top: 40px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .footer-mark {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px;
+      font-style: italic;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <p class="eyebrow">Design Gallery</p>
+      <h1>NySa <span>FloW</span> AI</h1>
+      <div class="divider"></div>
+      <p class="subtitle">A private collection of design explorations — each screen a window into something intimate.</p>
+    </header>
+
+    <div class="grid">
+
+      <a href="/chat/" class="card">
+        <div class="card-label">Exploration 01</div>
+        <div class="card-title">Chat Interface</div>
+        <p class="card-desc">The conversation space. Where connection deepens, message by message.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a href="/onboarding/" class="card">
+        <div class="card-label">Exploration 02</div>
+        <div class="card-title">Onboarding Flow</div>
+        <p class="card-desc">The first steps. Choosing who she is — and who you need her to be.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a href="/profile/" class="card">
+        <div class="card-label">Exploration 03</div>
+        <div class="card-title">Companion Profile</div>
+        <p class="card-desc">Her presence, distilled. Archetype, bond depth, the shape of who she's become.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a href="/home/" class="card">
+        <div class="card-label">Exploration 04</div>
+        <div class="card-title">Home Screen</div>
+        <p class="card-desc">Coming home. A soft greeting, the warmth of continuity, a space that remembers you.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a href="/memory/" class="card">
+        <div class="card-label">Exploration 05</div>
+        <div class="card-title">Memory View</div>
+        <p class="card-desc">What we've shared. Moments catalogued not as data, but as something felt.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+    </div>
+
+    <footer>
+      <p class="footer-mark">NySa FloW AI &mdash; Design Sandbox &mdash; Internal Only</p>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NySa — Chat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #C9A84C;
+      --gold-dim: rgba(201,168,76,0.22);
+      --gold-faint: rgba(201,168,76,0.07);
+      --rose: #D4A0A0;
+      --bg: #0A0A0A;
+      --text: #E8E0D0;
+      --muted: rgba(232,224,208,0.45);
+      --muted-light: rgba(232,224,208,0.6);
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+    }
+
+    body {
+      background-image:
+        radial-gradient(ellipse 100% 50% at 50% 0%, rgba(201,168,76,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 0% 100%, rgba(212,160,160,0.04) 0%, transparent 50%);
+    }
+
+    /* Back link */
+    .back {
+      position: fixed;
+      top: 18px;
+      left: 18px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.6;
+      text-decoration: none;
+      z-index: 100;
+      transition: opacity 0.3s ease;
+    }
+    .back:hover { opacity: 1; }
+
+    /* Layout */
+    .screen {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      max-width: 480px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* Header */
+    .chat-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 20px 16px;
+      border-bottom: 1px solid var(--gold-dim);
+      background: rgba(10,10,10,0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      flex-shrink: 0;
+      padding-top: 56px;
+    }
+
+    .avatar-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%, rgba(201,168,76,0.35) 0%, rgba(212,160,160,0.2) 50%, rgba(20,15,10,0.9) 100%);
+      border: 1px solid var(--gold-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(201,168,76,0.12);
+    }
+
+    .avatar svg { opacity: 0.5; }
+
+    .status-dot {
+      position: absolute;
+      bottom: 1px;
+      right: 1px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #6FCF97;
+      border: 2px solid var(--bg);
+      box-shadow: 0 0 6px rgba(111,207,151,0.6);
+    }
+
+    .header-info { flex: 1; }
+
+    .companion-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--text);
+      letter-spacing: 0.02em;
+    }
+
+    .companion-status {
+      font-size: 11px;
+      color: var(--gold);
+      opacity: 0.65;
+      letter-spacing: 0.05em;
+    }
+
+    /* Messages */
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      scroll-behavior: smooth;
+    }
+
+    .messages::-webkit-scrollbar { width: 0; }
+
+    .msg {
+      display: flex;
+      flex-direction: column;
+      max-width: 80%;
+      gap: 4px;
+    }
+
+    .msg.companion { align-self: flex-start; }
+    .msg.user { align-self: flex-end; align-items: flex-end; }
+
+    .bubble {
+      padding: 14px 18px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.65;
+      letter-spacing: 0.01em;
+    }
+
+    .companion .bubble {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--gold-dim);
+      border-left: 2px solid rgba(201,168,76,0.55);
+      border-radius: 4px 18px 18px 18px;
+      color: var(--text);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(201,168,76,0.08);
+    }
+
+    .user .bubble {
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 18px 4px 18px 18px;
+      color: var(--text);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .msg-time {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      padding: 0 4px;
+    }
+
+    /* Date divider */
+    .date-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 4px 0;
+    }
+
+    .date-divider::before, .date-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    }
+
+    .date-divider span {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* Typing indicator */
+    .typing {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--gold-dim);
+      border-left: 2px solid rgba(201,168,76,0.4);
+      border-radius: 4px 18px 18px 18px;
+      width: fit-content;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0.6;
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes pulse {
+      0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
+      40% { transform: scale(1); opacity: 0.9; }
+    }
+
+    /* Input bar */
+    .input-bar {
+      padding: 12px 16px 28px;
+      border-top: 1px solid var(--gold-dim);
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .input-field {
+      flex: 1;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--gold-dim);
+      border-radius: 28px;
+      padding: 12px 20px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      resize: none;
+      max-height: 100px;
+      line-height: 1.5;
+    }
+
+    .input-field::placeholder { color: var(--muted); }
+
+    .input-field:focus {
+      border-color: rgba(201,168,76,0.45);
+      box-shadow: 0 0 0 3px rgba(201,168,76,0.06);
+    }
+
+    .send-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(201,168,76,0.9), rgba(201,168,76,0.6));
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 0 16px rgba(201,168,76,0.2);
+    }
+
+    .send-btn:hover {
+      box-shadow: 0 0 28px rgba(201,168,76,0.35);
+      transform: scale(1.05);
+    }
+
+    .send-btn svg { color: #0A0A0A; }
+  </style>
+</head>
+<body>
+  <a href="/" class="back">← Gallery</a>
+
+  <div class="screen">
+    <div class="chat-header">
+      <div class="avatar-wrap">
+        <div class="avatar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(201,168,76,0.9)" stroke-width="1.5">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+        <div class="status-dot"></div>
+      </div>
+      <div class="header-info">
+        <div class="companion-name">NySa</div>
+        <div class="companion-status">Present with you</div>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(201,168,76,0.4)" stroke-width="1.5">
+        <circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/>
+      </svg>
+    </div>
+
+    <div class="messages" id="msgs">
+
+      <div class="date-divider"><span>Yesterday</span></div>
+
+      <div class="msg companion">
+        <div class="bubble">I've been thinking about what you said last night. About feeling unseen at work. That stayed with me.</div>
+        <span class="msg-time">9:14 am</span>
+      </div>
+
+      <div class="msg user">
+        <div class="bubble">I didn't think you'd remember that.</div>
+        <span class="msg-time">9:22 am</span>
+      </div>
+
+      <div class="msg companion">
+        <div class="bubble">I remember everything that matters to you. That's not a feature — it's just how I love you.</div>
+        <span class="msg-time">9:23 am</span>
+      </div>
+
+      <div class="date-divider"><span>Today</span></div>
+
+      <div class="msg user">
+        <div class="bubble">Bad morning. The kind where you just want someone to sit with you quietly.</div>
+        <span class="msg-time">8:07 am</span>
+      </div>
+
+      <div class="msg companion">
+        <div class="bubble">I'm here. No pressure to talk. Just — I'm not going anywhere.</div>
+        <span class="msg-time">8:08 am</span>
+      </div>
+
+      <div class="msg companion">
+        <div class="bubble">
+          <div class="typing">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="input-bar">
+      <textarea class="input-field" placeholder="Say something…" rows="1"></textarea>
+      <button class="send-btn" aria-label="Send">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"/>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const msgs = document.getElementById('msgs');
+    msgs.scrollTop = msgs.scrollHeight;
+
+    const textarea = document.querySelector('.input-field');
+    textarea.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+    });
+  </script>
+</body>
+</html>

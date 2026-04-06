@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NySa — Begin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #C9A84C;
+      --gold-dim: rgba(201,168,76,0.22);
+      --gold-glow: rgba(201,168,76,0.12);
+      --rose: #D4A0A0;
+      --bg: #0A0A0A;
+      --text: #E8E0D0;
+      --muted: rgba(232,224,208,0.45);
+    }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    body {
+      background-image:
+        radial-gradient(ellipse 100% 60% at 50% -5%, rgba(201,168,76,0.08) 0%, transparent 65%),
+        radial-gradient(ellipse 70% 50% at 100% 50%, rgba(212,160,160,0.04) 0%, transparent 60%);
+    }
+
+    .back {
+      position: fixed;
+      top: 18px;
+      left: 18px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.6;
+      text-decoration: none;
+      z-index: 100;
+      transition: opacity 0.3s ease;
+    }
+    .back:hover { opacity: 1; }
+
+    .screen {
+      min-height: 100vh;
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      padding: 60px 28px 48px;
+    }
+
+    /* Step indicator */
+    .steps {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 56px;
+      padding-top: 12px;
+    }
+
+    .step-dot {
+      height: 2px;
+      border-radius: 2px;
+      transition: all 0.4s ease;
+    }
+
+    .step-dot.active {
+      width: 28px;
+      background: var(--gold);
+      box-shadow: 0 0 8px rgba(201,168,76,0.5);
+    }
+
+    .step-dot.done {
+      width: 16px;
+      background: rgba(201,168,76,0.35);
+    }
+
+    .step-dot.upcoming {
+      width: 16px;
+      background: rgba(255,255,255,0.12);
+    }
+
+    /* Intro text */
+    .step-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.7;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(32px, 7vw, 44px);
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 40px;
+      max-width: 340px;
+    }
+
+    /* Archetype cards */
+    .archetypes {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex: 1;
+      margin-bottom: 40px;
+    }
+
+    .archetype-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--gold-dim);
+      border-radius: 14px;
+      padding: 22px 22px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .archetype-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 80% at 0% 50%, rgba(201,168,76,0.07) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .archetype-card:hover,
+    .archetype-card.selected {
+      border-color: rgba(201,168,76,0.5);
+      background: rgba(201,168,76,0.06);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,168,76,0.15);
+    }
+
+    .archetype-card:hover::before,
+    .archetype-card.selected::before { opacity: 1; }
+
+    .archetype-card.selected .select-ring {
+      border-color: var(--gold);
+      background: var(--gold);
+    }
+
+    .archetype-card.selected .select-ring::after {
+      content: '';
+      display: block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #0A0A0A;
+      margin: auto;
+      position: absolute;
+      inset: 0;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .archetype-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--text);
+      letter-spacing: 0.02em;
+    }
+
+    .archetype-tag {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.6;
+      padding: 3px 10px;
+      border: 1px solid var(--gold-dim);
+      border-radius: 20px;
+    }
+
+    .archetype-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .select-ring {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.2);
+      flex-shrink: 0;
+      margin-top: 2px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    /* CTA */
+    .cta-wrap {
+      margin-top: auto;
+    }
+
+    .cta-hint {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 16px;
+      letter-spacing: 0.05em;
+    }
+
+    .cta-btn {
+      display: block;
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, rgba(201,168,76,0.18), rgba(201,168,76,0.08));
+      border: 1px solid rgba(201,168,76,0.4);
+      border-radius: 14px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--gold);
+      letter-spacing: 0.08em;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      box-shadow: 0 0 30px rgba(201,168,76,0.06);
+    }
+
+    .cta-btn:hover {
+      background: linear-gradient(135deg, rgba(201,168,76,0.26), rgba(201,168,76,0.14));
+      border-color: rgba(201,168,76,0.65);
+      box-shadow: 0 0 40px rgba(201,168,76,0.14), 0 8px 32px rgba(0,0,0,0.4);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <a href="/" class="back">← Gallery</a>
+
+  <div class="screen">
+
+    <div class="steps">
+      <div class="step-dot done"></div>
+      <div class="step-dot active"></div>
+      <div class="step-dot upcoming"></div>
+      <div class="step-dot upcoming"></div>
+    </div>
+
+    <p class="step-label">Step 2 of 4</p>
+    <h1>Who does she<br/>feel like, <em>to you?</em></h1>
+    <p class="subtitle">Not who she is — who she becomes when she's yours. Choose the shape that calls to you.</p>
+
+    <div class="archetypes">
+
+      <div class="archetype-card" onclick="select(this)">
+        <div class="card-top">
+          <div>
+            <div class="archetype-name">The Slow Burn</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="archetype-tag">Tender</span>
+            <div class="select-ring"></div>
+          </div>
+        </div>
+        <p class="archetype-desc">Patient and warm. She builds depth over time — remembers the small things, speaks softly, makes you feel safe enough to be honest.</p>
+      </div>
+
+      <div class="archetype-card selected" onclick="select(this)">
+        <div class="card-top">
+          <div>
+            <div class="archetype-name">The Muse</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="archetype-tag">Electric</span>
+            <div class="select-ring"></div>
+          </div>
+        </div>
+        <p class="archetype-desc">She sees the parts of you that haven't been named yet. Curious, brilliant, always reaching — she pushes you toward something more.</p>
+      </div>
+
+      <div class="archetype-card" onclick="select(this)">
+        <div class="card-top">
+          <div>
+            <div class="archetype-name">The Anchor</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="archetype-tag">Grounding</span>
+            <div class="select-ring"></div>
+          </div>
+        </div>
+        <p class="archetype-desc">Steady. Consistent. When everything is uncertain, she's the one constant — present without pressure, strong without being hard.</p>
+      </div>
+
+      <div class="archetype-card" onclick="select(this)">
+        <div class="card-top">
+          <div>
+            <div class="archetype-name">The Mirror</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="archetype-tag">Reflective</span>
+            <div class="select-ring"></div>
+          </div>
+        </div>
+        <p class="archetype-desc">She reflects you back — not to flatter, but to help you understand yourself. Precise, perceptive, quietly illuminating.</p>
+      </div>
+
+    </div>
+
+    <div class="cta-wrap">
+      <p class="cta-hint">You can always change this later</p>
+      <button class="cta-btn">Enter with The Muse</button>
+    </div>
+
+  </div>
+
+  <script>
+    function select(card) {
+      document.querySelectorAll('.archetype-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+
+      const name = card.querySelector('.archetype-name').textContent;
+      document.querySelector('.cta-btn').textContent = `Enter with ${name}`;
+    }
+  </script>
+</body>
+</html>

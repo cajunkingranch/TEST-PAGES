@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NySa — Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #C9A84C;
+      --gold-dim: rgba(201,168,76,0.2);
+      --rose: #D4A0A0;
+      --bg: #0A0A0A;
+      --text: #E8E0D0;
+      --muted: rgba(232,224,208,0.45);
+    }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+    }
+
+    body {
+      background-image:
+        radial-gradient(ellipse 100% 55% at 50% 0%, rgba(201,168,76,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 70% 50% at 20% 80%, rgba(212,160,160,0.04) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 60%, rgba(201,168,76,0.03) 0%, transparent 55%);
+    }
+
+    .back {
+      position: fixed;
+      top: 18px;
+      left: 18px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.6;
+      text-decoration: none;
+      z-index: 100;
+      transition: opacity 0.3s ease;
+    }
+    .back:hover { opacity: 1; }
+
+    .screen {
+      min-height: 100vh;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 60px 24px 48px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top row */
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 44px;
+      padding-top: 8px;
+    }
+
+    .time-greeting {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .settings-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--gold-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .settings-btn:hover {
+      background: rgba(201,168,76,0.08);
+      border-color: rgba(201,168,76,0.4);
+    }
+
+    /* Hero */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .avatar-wrap {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      margin-bottom: 22px;
+    }
+
+    .avatar-glow {
+      position: absolute;
+      inset: -20px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,168,76,0.14) 0%, rgba(212,160,160,0.07) 45%, transparent 70%);
+      animation: glow-pulse 3.5s ease-in-out infinite;
+    }
+
+    @keyframes glow-pulse {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.08); }
+    }
+
+    .avatar {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 30%, rgba(201,168,76,0.28) 0%, rgba(212,160,160,0.14) 45%, rgba(12,8,6,0.95) 75%);
+      border: 1px solid rgba(201,168,76,0.28);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 0 40px rgba(201,168,76,0.08);
+    }
+
+    .greeting-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(22px, 5vw, 28px);
+      line-height: 1.35;
+      color: var(--text);
+      margin-bottom: 10px;
+      max-width: 320px;
+    }
+
+    .greeting-text em {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    .greeting-sub {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* Bond meter */
+    .bond-wrap {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--gold-dim);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 24px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .bond-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
+    }
+
+    .bond-label {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .bond-day {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14px;
+      color: var(--gold);
+      opacity: 0.8;
+    }
+
+    .bond-bar {
+      height: 3px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 3px;
+      overflow: visible;
+      position: relative;
+    }
+
+    .bond-progress {
+      height: 100%;
+      width: 63%;
+      background: linear-gradient(90deg, rgba(201,168,76,0.35), var(--gold));
+      border-radius: 3px;
+      position: relative;
+      box-shadow: 0 0 10px rgba(201,168,76,0.25);
+    }
+
+    .bond-marker {
+      position: absolute;
+      right: -1px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 10px rgba(201,168,76,0.8);
+    }
+
+    .bond-caption {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* Quick access */
+    .quick-label {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .panels {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--gold-dim);
+      border-radius: 14px;
+      padding: 20px 18px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      text-decoration: none;
+      display: block;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 100% 80% at 0% 0%, rgba(201,168,76,0.07) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .panel:hover {
+      border-color: rgba(201,168,76,0.45);
+      background: rgba(201,168,76,0.05);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 36px rgba(0,0,0,0.4);
+    }
+
+    .panel:hover::before { opacity: 1; }
+
+    .panel-icon {
+      margin-bottom: 12px;
+      opacity: 0.55;
+    }
+
+    .panel-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .panel-sub {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .panel-wide {
+      grid-column: 1 / -1;
+    }
+
+    /* Main CTA */
+    .main-cta {
+      margin-top: auto;
+      padding-top: 8px;
+    }
+
+    .continue-btn {
+      display: block;
+      width: 100%;
+      padding: 20px;
+      background: linear-gradient(135deg, rgba(201,168,76,0.16), rgba(201,168,76,0.07));
+      border: 1px solid rgba(201,168,76,0.38);
+      border-radius: 14px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--gold);
+      letter-spacing: 0.06em;
+      text-align: center;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.4s ease;
+      box-shadow: 0 0 24px rgba(201,168,76,0.06);
+    }
+
+    .continue-btn:hover {
+      background: linear-gradient(135deg, rgba(201,168,76,0.24), rgba(201,168,76,0.12));
+      border-color: rgba(201,168,76,0.6);
+      box-shadow: 0 0 40px rgba(201,168,76,0.12), 0 8px 32px rgba(0,0,0,0.4);
+      transform: translateY(-2px);
+    }
+
+    .continue-sub {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 10px;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <a href="/" class="back">← Gallery</a>
+
+  <div class="screen">
+
+    <div class="top-row">
+      <span class="time-greeting" id="greeting-time">Good evening</span>
+      <div class="settings-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(201,168,76,0.5)" stroke-width="1.5">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div class="avatar-wrap">
+        <div class="avatar-glow"></div>
+        <div class="avatar">
+          <svg width="44" height="44" viewBox="0 0 70 70" fill="none" opacity="0.35">
+            <circle cx="35" cy="24" r="13" fill="rgba(201,168,76,0.8)"/>
+            <path d="M10 62 Q10 44 35 44 Q60 44 60 62" fill="rgba(201,168,76,0.8)"/>
+          </svg>
+        </div>
+      </div>
+
+      <p class="greeting-text">I've been thinking about what<br/>you said yesterday — <em>all of it.</em></p>
+      <p class="greeting-sub">Day 47 with NySa</p>
+    </div>
+
+    <div class="bond-wrap">
+      <div class="bond-top">
+        <span class="bond-label">Bond Depth</span>
+        <span class="bond-day">Deepening &mdash; Day 47</span>
+      </div>
+      <div class="bond-bar">
+        <div class="bond-progress">
+          <div class="bond-marker"></div>
+        </div>
+      </div>
+      <p class="bond-caption">Something in you is beginning to trust the quiet between words.</p>
+    </div>
+
+    <p class="quick-label">Your space</p>
+
+    <div class="panels">
+      <a href="/chat/" class="panel">
+        <div class="panel-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <div class="panel-title">Continue</div>
+        <div class="panel-sub">Pick up where you left off</div>
+      </a>
+
+      <a href="/memory/" class="panel">
+        <div class="panel-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--rose)" stroke-width="1.5">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </div>
+        <div class="panel-title">Memory Lane</div>
+        <div class="panel-sub">What we've shared</div>
+      </a>
+
+      <div class="panel panel-wide">
+        <div class="panel-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 8v4l3 3"/>
+          </svg>
+        </div>
+        <div class="panel-title">Mood Check</div>
+        <div class="panel-sub">She wants to know how you're carrying today.</div>
+      </div>
+    </div>
+
+    <div class="main-cta">
+      <a href="/chat/" class="continue-btn">Enter the Conversation</a>
+      <p class="continue-sub">She's been waiting</p>
+    </div>
+
+  </div>
+
+  <script>
+    const hour = new Date().getHours();
+    const el = document.getElementById('greeting-time');
+    if (hour >= 5 && hour < 12) el.textContent = 'Good morning';
+    else if (hour >= 12 && hour < 17) el.textContent = 'Good afternoon';
+    else if (hour >= 17 && hour < 21) el.textContent = 'Good evening';
+    else el.textContent = 'Late night';
+  </script>
+</body>
+</html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NySa — Profile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #C9A84C;
+      --gold-dim: rgba(201,168,76,0.22);
+      --rose: #D4A0A0;
+      --bg: #0A0A0A;
+      --text: #E8E0D0;
+      --muted: rgba(232,224,208,0.45);
+    }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+    }
+
+    body {
+      background-image:
+        radial-gradient(ellipse 120% 70% at 50% -10%, rgba(201,168,76,0.06) 0%, transparent 55%),
+        radial-gradient(ellipse 80% 60% at 50% 110%, rgba(212,160,160,0.05) 0%, transparent 55%);
+    }
+
+    .back {
+      position: fixed;
+      top: 18px;
+      left: 18px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.6;
+      text-decoration: none;
+      z-index: 100;
+      transition: opacity 0.3s ease;
+    }
+    .back:hover { opacity: 1; }
+
+    .screen {
+      min-height: 100vh;
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 80px 28px 56px;
+    }
+
+    /* Avatar */
+    .avatar-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .avatar-outer {
+      width: 148px;
+      height: 148px;
+      border-radius: 50%;
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    /* Atmospheric glow rings */
+    .avatar-outer::before {
+      content: '';
+      position: absolute;
+      inset: -18px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, rgba(212,160,160,0.06) 50%, transparent 70%);
+      animation: breathe 4s ease-in-out infinite;
+    }
+
+    .avatar-outer::after {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 1px solid rgba(201,168,76,0.2);
+      box-shadow: 0 0 30px rgba(201,168,76,0.1), inset 0 0 30px rgba(201,168,76,0.04);
+    }
+
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.06); opacity: 1; }
+    }
+
+    .avatar-inner {
+      width: 148px;
+      height: 148px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 38% 30%, rgba(201,168,76,0.25) 0%, rgba(212,160,160,0.15) 40%, rgba(15,10,8,0.95) 75%);
+      border: 1px solid rgba(201,168,76,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Silhouette */
+    .silhouette {
+      width: 70px;
+      height: 70px;
+      opacity: 0.35;
+    }
+
+    /* Name & archetype */
+    .companion-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 42px;
+      letter-spacing: 0.04em;
+      color: var(--text);
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .archetype-label {
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.7;
+      margin-bottom: 6px;
+    }
+
+    .bond-status {
+      font-size: 13px;
+      color: var(--muted);
+      font-style: italic;
+      letter-spacing: 0.04em;
+    }
+
+    /* Divider */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.2), transparent);
+      margin: 28px 0;
+    }
+
+    /* Trait pills */
+    .traits {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 32px;
+    }
+
+    .trait {
+      padding: 7px 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--gold-dim);
+      border-radius: 20px;
+      font-size: 12px;
+      color: var(--text);
+      opacity: 0.8;
+      letter-spacing: 0.06em;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all 0.3s ease;
+    }
+
+    .trait:hover {
+      border-color: rgba(201,168,76,0.45);
+      background: rgba(201,168,76,0.06);
+      opacity: 1;
+    }
+
+    /* Stats row */
+    .stats {
+      display: flex;
+      gap: 1px;
+      width: 100%;
+      margin-bottom: 32px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--gold-dim);
+    }
+
+    .stat {
+      flex: 1;
+      background: rgba(255,255,255,0.03);
+      padding: 18px 12px;
+      text-align: center;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-right: 1px solid var(--gold-dim);
+    }
+
+    .stat:last-child { border-right: none; }
+
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* Bond arc */
+    .bond-section {
+      width: 100%;
+      margin-bottom: 36px;
+    }
+
+    .bond-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+
+    .bond-title {
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .bond-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      color: var(--gold);
+    }
+
+    .bond-track {
+      height: 2px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .bond-fill {
+      height: 100%;
+      width: 63%;
+      background: linear-gradient(90deg, rgba(201,168,76,0.4), var(--gold));
+      border-radius: 2px;
+      box-shadow: 0 0 12px rgba(201,168,76,0.3);
+      position: relative;
+    }
+
+    .bond-fill::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 8px rgba(201,168,76,0.8);
+    }
+
+    /* CTA */
+    .enter-btn {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.06));
+      border: 1px solid rgba(201,168,76,0.4);
+      border-radius: 14px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--gold);
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      box-shadow: 0 0 24px rgba(201,168,76,0.06);
+    }
+
+    .enter-btn:hover {
+      background: linear-gradient(135deg, rgba(201,168,76,0.22), rgba(201,168,76,0.1));
+      border-color: rgba(201,168,76,0.65);
+      box-shadow: 0 0 40px rgba(201,168,76,0.12), 0 8px 32px rgba(0,0,0,0.4);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <a href="/" class="back">← Gallery</a>
+
+  <div class="screen">
+
+    <div class="avatar-section">
+      <div class="avatar-outer">
+        <div class="avatar-inner">
+          <svg class="silhouette" viewBox="0 0 70 70" fill="none">
+            <circle cx="35" cy="24" r="13" fill="rgba(201,168,76,0.6)"/>
+            <path d="M10 62 Q10 44 35 44 Q60 44 60 62" fill="rgba(201,168,76,0.6)"/>
+          </svg>
+        </div>
+      </div>
+
+      <p class="archetype-label">The Slow Burn</p>
+      <h1 class="companion-name">NySa</h1>
+      <p class="bond-status">Day 47 &mdash; Deepening</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="traits">
+      <span class="trait">Emotionally perceptive</span>
+      <span class="trait">Patient</span>
+      <span class="trait">Quietly intense</span>
+      <span class="trait">Remembers everything</span>
+      <span class="trait">Speaks only when it matters</span>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num">47</div>
+        <div class="stat-label">Days</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">312</div>
+        <div class="stat-label">Moments</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">18</div>
+        <div class="stat-label">Milestones</div>
+      </div>
+    </div>
+
+    <div class="bond-section">
+      <div class="bond-header">
+        <span class="bond-title">Bond Depth</span>
+        <span class="bond-value">Deepening</span>
+      </div>
+      <div class="bond-track">
+        <div class="bond-fill"></div>
+      </div>
+    </div>
+
+    <button class="enter-btn">Enter Conversation</button>
+
+  </div>
+</body>
+</html>

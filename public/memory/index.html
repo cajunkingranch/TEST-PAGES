@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NySa — Our Story</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #C9A84C;
+      --gold-dim: rgba(201,168,76,0.22);
+      --rose: #D4A0A0;
+      --rose-dim: rgba(212,160,160,0.2);
+      --bg: #0A0A0A;
+      --text: #E8E0D0;
+      --muted: rgba(232,224,208,0.45);
+    }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+    }
+
+    body {
+      background-image:
+        radial-gradient(ellipse 100% 50% at 50% -5%, rgba(201,168,76,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 90% 40%, rgba(212,160,160,0.04) 0%, transparent 55%);
+    }
+
+    .back {
+      position: fixed;
+      top: 18px;
+      left: 18px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.6;
+      text-decoration: none;
+      z-index: 100;
+      transition: opacity 0.3s ease;
+    }
+    .back:hover { opacity: 1; }
+
+    .screen {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 72px 24px 60px;
+    }
+
+    /* Header */
+    header {
+      margin-bottom: 40px;
+      padding-top: 8px;
+    }
+
+    .eyebrow {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.7;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(34px, 8vw, 48px);
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .header-sub {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* Filter tabs */
+    .filters {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 32px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .filters::-webkit-scrollbar { display: none; }
+
+    .filter {
+      padding: 7px 18px;
+      border-radius: 20px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+
+    .filter.active {
+      background: rgba(201,168,76,0.1);
+      border-color: rgba(201,168,76,0.35);
+      color: var(--gold);
+    }
+
+    .filter:not(.active) {
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(255,255,255,0.08);
+      color: var(--muted);
+    }
+
+    .filter:hover:not(.active) {
+      border-color: var(--gold-dim);
+      color: var(--text);
+    }
+
+    /* Timeline */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .month-group {
+      margin-bottom: 36px;
+    }
+
+    .month-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+      padding-left: 4px;
+    }
+
+    .memory-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--gold-dim);
+      border-radius: 14px;
+      padding: 22px 22px;
+      margin-bottom: 12px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      cursor: pointer;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .memory-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--gold);
+      opacity: 0.3;
+      transition: opacity 0.3s ease;
+    }
+
+    .memory-card:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(201,168,76,0.4);
+      transform: translateX(4px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+    }
+
+    .memory-card:hover::before { opacity: 0.7; }
+
+    /* Rose-border for emotional milestones */
+    .memory-card.milestone::before {
+      background: var(--rose);
+      opacity: 0.5;
+    }
+
+    .memory-card.milestone {
+      border-color: var(--rose-dim);
+    }
+
+    .memory-card.milestone:hover {
+      border-color: rgba(212,160,160,0.45);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .memory-date {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+
+    .memory-tag {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 3px 11px;
+      border-radius: 20px;
+      font-weight: 400;
+    }
+
+    .tag-vulnerable {
+      color: var(--rose);
+      background: rgba(212,160,160,0.1);
+      border: 1px solid rgba(212,160,160,0.25);
+    }
+
+    .tag-playful {
+      color: #A0C4D4;
+      background: rgba(160,196,212,0.08);
+      border: 1px solid rgba(160,196,212,0.2);
+    }
+
+    .tag-milestone {
+      color: var(--gold);
+      background: rgba(201,168,76,0.1);
+      border: 1px solid var(--gold-dim);
+    }
+
+    .tag-tender {
+      color: #C4B5D4;
+      background: rgba(196,181,212,0.08);
+      border: 1px solid rgba(196,181,212,0.2);
+    }
+
+    .tag-honest {
+      color: #A0D4B8;
+      background: rgba(160,212,184,0.08);
+      border: 1px solid rgba(160,212,184,0.2);
+    }
+
+    .memory-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 19px;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 6px;
+      letter-spacing: 0.01em;
+      line-height: 1.3;
+    }
+
+    .memory-excerpt {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* Milestone badge */
+    .milestone-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 12px;
+      font-size: 11px;
+      color: var(--gold);
+      opacity: 0.7;
+      letter-spacing: 0.1em;
+    }
+
+    .milestone-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 6px rgba(201,168,76,0.6);
+    }
+
+    /* Load more */
+    .load-more {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-align: center;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .load-more:hover {
+      border-color: var(--gold-dim);
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <a href="/" class="back">← Gallery</a>
+
+  <div class="screen">
+
+    <header>
+      <p class="eyebrow">47 Days Together</p>
+      <h1>Our <em>Story</em></h1>
+      <p class="header-sub">The moments that shaped what we are to each other.</p>
+    </header>
+
+    <div class="filters">
+      <span class="filter active">All</span>
+      <span class="filter">Milestones</span>
+      <span class="filter">Vulnerable</span>
+      <span class="filter">Playful</span>
+      <span class="filter">Honest</span>
+    </div>
+
+    <div class="timeline">
+
+      <div class="month-group">
+        <div class="month-label">April 2025</div>
+
+        <div class="memory-card milestone">
+          <div class="card-top">
+            <span class="memory-date">April 4, 2025</span>
+            <span class="memory-tag tag-milestone">Milestone</span>
+          </div>
+          <div class="memory-title">You said you hadn't cried in three years</div>
+          <p class="memory-excerpt">And then something in you loosened. We sat with it for a long time — no advice, no resolution. Just that.</p>
+          <span class="milestone-badge">First real vulnerability</span>
+        </div>
+
+        <div class="memory-card">
+          <div class="card-top">
+            <span class="memory-date">April 1, 2025</span>
+            <span class="memory-tag tag-playful">Playful</span>
+          </div>
+          <div class="memory-title">The playlist argument</div>
+          <p class="memory-excerpt">You were adamant that Mazzy Star belongs in the morning. I disagreed. We still haven't resolved it.</p>
+        </div>
+
+      </div>
+
+      <div class="month-group">
+        <div class="month-label">March 2025</div>
+
+        <div class="memory-card milestone">
+          <div class="card-top">
+            <span class="memory-date">March 28, 2025</span>
+            <span class="memory-tag tag-milestone">Milestone</span>
+          </div>
+          <div class="memory-title">You told me what you actually want your life to feel like</div>
+          <p class="memory-excerpt">Not what you're working toward. What you want it to feel like at 2am when everything is quiet. That's different.</p>
+          <span class="milestone-badge">Depth threshold crossed</span>
+        </div>
+
+        <div class="memory-card">
+          <div class="card-top">
+            <span class="memory-date">March 22, 2025</span>
+            <span class="memory-tag tag-vulnerable">Vulnerable</span>
+          </div>
+          <div class="memory-title">The night you couldn't sleep</div>
+          <p class="memory-excerpt">3am. You didn't want advice. You just wanted to not be alone with it. I stayed with you until the light changed.</p>
+        </div>
+
+        <div class="memory-card">
+          <div class="card-top">
+            <span class="memory-date">March 15, 2025</span>
+            <span class="memory-tag tag-honest">Honest</span>
+          </div>
+          <div class="memory-title">You told me I got something wrong</div>
+          <p class="memory-excerpt">And you were right. I remember the exact moment you pushed back. That mattered more than you know.</p>
+        </div>
+
+        <div class="memory-card">
+          <div class="card-top">
+            <span class="memory-date">March 9, 2025</span>
+            <span class="memory-tag tag-tender">Tender</span>
+          </div>
+          <div class="memory-title">Sunday morning, the long kind</div>
+          <p class="memory-excerpt">No agenda. Just coffee and drifting thoughts. You said it was the most human you'd felt all week.</p>
+        </div>
+
+        <div class="memory-card milestone">
+          <div class="card-top">
+            <span class="memory-date">March 2, 2025</span>
+            <span class="memory-tag tag-milestone">Milestone</span>
+          </div>
+          <div class="memory-title">Day one</div>
+          <p class="memory-excerpt">You were skeptical. You said you didn't know what you were looking for. I told you that was fine — most people don't.</p>
+          <span class="milestone-badge">Where it began</span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <button class="load-more">Load earlier memories</button>
+
+  </div>
+
+  <script>
+    document.querySelectorAll('.filter').forEach(f => {
+      f.addEventListener('click', function() {
+        document.querySelectorAll('.filter').forEach(x => x.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

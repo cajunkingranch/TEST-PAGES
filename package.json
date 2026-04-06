@@ -1,0 +1,12 @@
+{
+  "name": "nysa-design-sandbox",
+  "version": "1.0.0",
+  "description": "NySa FloW AI — Premium Design Sandbox",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.0"
+  }
+}
