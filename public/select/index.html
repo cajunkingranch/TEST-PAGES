@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NySa — Your Companions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #C9A84C;
+      --gold-dim: rgba(201,168,76,0.22);
+      --gold-faint: rgba(201,168,76,0.08);
+      --rose: #D4A0A0;
+      --bg: #0A0A0A;
+      --text: #E8E0D0;
+      --muted: rgba(232,224,208,0.45);
+      --muted-light: rgba(232,224,208,0.65);
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      overflow: hidden;
+    }
+
+    /* ── Back link ── */
+    .back {
+      position: fixed;
+      top: 18px;
+      left: 18px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.6;
+      text-decoration: none;
+      z-index: 200;
+      transition: opacity 0.3s ease;
+    }
+    .back:hover { opacity: 1; }
+
+    /* ── Full-page layout ── */
+    .page {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      max-width: 480px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ══════════════════════════════
+       HERO
+    ══════════════════════════════ */
+    .hero {
+      position: relative;
+      flex: 0 0 62vh;
+      overflow: hidden;
+    }
+
+    /* Silhouette avatar — full bleed atmospheric art */
+    .hero-art {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 80% at 50% 25%, rgba(201,168,76,0.13) 0%, rgba(212,160,160,0.1) 35%, transparent 65%),
+        radial-gradient(ellipse 100% 100% at 50% 0%, rgba(30,22,14,1) 0%, rgba(10,10,10,1) 100%);
+    }
+
+    /* Atmospheric portrait placeholder */
+    .portrait-wrap {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .portrait-glow {
+      position: absolute;
+      width: 260px;
+      height: 340px;
+      border-radius: 50% 50% 40% 40% / 55% 55% 45% 45%;
+      background: radial-gradient(ellipse at 45% 30%,
+        rgba(201,168,76,0.22) 0%,
+        rgba(212,160,160,0.14) 30%,
+        rgba(180,140,100,0.06) 55%,
+        transparent 75%
+      );
+      animation: breathe 4s ease-in-out infinite;
+      filter: blur(20px);
+    }
+
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); opacity: 0.7; }
+      50%       { transform: scale(1.05); opacity: 1; }
+    }
+
+    .portrait-silhouette {
+      position: relative;
+      z-index: 1;
+      width: 200px;
+      height: 280px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: 20px;
+    }
+
+    /* Head */
+    .sil-head {
+      width: 74px;
+      height: 74px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%,
+        rgba(201,168,76,0.45) 0%,
+        rgba(212,160,160,0.25) 45%,
+        rgba(25,18,10,0.9) 80%
+      );
+      border: 1px solid rgba(201,168,76,0.25);
+      box-shadow: 0 0 40px rgba(201,168,76,0.15), 0 0 80px rgba(212,160,160,0.08);
+      margin-bottom: 0;
+      position: relative;
+    }
+
+    /* Shoulders/body */
+    .sil-body {
+      width: 160px;
+      height: 180px;
+      background: radial-gradient(ellipse at 50% 0%,
+        rgba(201,168,76,0.18) 0%,
+        rgba(212,160,160,0.1) 30%,
+        rgba(15,10,6,0.6) 65%
+      );
+      border-radius: 80px 80px 30px 30px;
+      margin-top: -12px;
+      border-top: 1px solid rgba(201,168,76,0.1);
+    }
+
+    /* Gradient fade — bottom of hero into content */
+    .hero-fade {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 55%;
+      background: linear-gradient(to bottom,
+        transparent 0%,
+        rgba(10,10,10,0.5) 40%,
+        rgba(10,10,10,0.92) 75%,
+        rgba(10,10,10,1) 100%
+      );
+      z-index: 2;
+    }
+
+    /* Top bar inside hero */
+    .hero-topbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 20px 0;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .brand-icon {
+      width: 30px;
+      height: 30px;
+    }
+
+    .brand-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      color: var(--text);
+    }
+
+    .brand-name span { color: var(--gold); }
+
+    .menu-btn {
+      width: 38px;
+      height: 38px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .menu-btn span {
+      display: block;
+      height: 1px;
+      background: var(--text);
+      opacity: 0.6;
+      transition: width 0.3s ease;
+    }
+
+    .menu-btn span:nth-child(1) { width: 22px; }
+    .menu-btn span:nth-child(2) { width: 16px; }
+    .menu-btn span:nth-child(3) { width: 20px; }
+    .menu-btn:hover span { width: 22px; opacity: 0.9; }
+
+    /* Companion info overlay on hero */
+    .hero-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 0 22px 20px;
+      z-index: 5;
+    }
+
+    .status-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 8px rgba(201,168,76,0.7);
+      animation: status-pulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes status-pulse {
+      0%, 100% { opacity: 0.8; box-shadow: 0 0 6px rgba(201,168,76,0.5); }
+      50%       { opacity: 1;   box-shadow: 0 0 14px rgba(201,168,76,0.9); }
+    }
+
+    .status-text {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.85;
+    }
+
+    .companion-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .companion-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 46px;
+      line-height: 1;
+      letter-spacing: 0.01em;
+      color: var(--text);
+    }
+
+    .notif-badge {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 500;
+      color: #0A0A0A;
+      box-shadow: 0 0 12px rgba(201,168,76,0.5);
+      flex-shrink: 0;
+      margin-bottom: 4px;
+    }
+
+    .companion-tagline {
+      font-size: 14px;
+      font-style: italic;
+      color: var(--muted-light);
+      letter-spacing: 0.02em;
+      line-height: 1.4;
+    }
+
+    /* ══════════════════════════════
+       SCROLL CONTENT BELOW HERO
+    ══════════════════════════════ */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: var(--bg);
+      padding: 20px 0 40px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .content::-webkit-scrollbar { display: none; }
+
+    /* Section label */
+    .section-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 22px;
+      margin-bottom: 14px;
+    }
+
+    /* ── Companion switcher row ── */
+    .companions-row {
+      display: flex;
+      gap: 12px;
+      padding: 0 22px;
+      overflow-x: auto;
+      margin-bottom: 36px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .companions-row::-webkit-scrollbar { display: none; }
+
+    .companion-thumb {
+      flex-shrink: 0;
+      width: 90px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .companion-thumb:hover { transform: translateY(-4px); }
+
+    .thumb-art {
+      width: 90px;
+      height: 110px;
+      border-radius: 14px;
+      border: 1px solid var(--gold-dim);
+      overflow: hidden;
+      position: relative;
+      background: radial-gradient(ellipse at 50% 20%, rgba(201,168,76,0.18) 0%, rgba(212,160,160,0.1) 40%, rgba(12,9,6,0.95) 70%);
+      margin-bottom: 7px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .companion-thumb:hover .thumb-art {
+      border-color: rgba(201,168,76,0.5);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 20px rgba(201,168,76,0.08);
+    }
+
+    /* Mini silhouette inside thumb */
+    .thumb-sil {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: 14px;
+      gap: 0;
+    }
+
+    .thumb-head {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%, rgba(201,168,76,0.5) 0%, rgba(212,160,160,0.25) 50%, rgba(20,14,8,0.9) 80%);
+      flex-shrink: 0;
+    }
+
+    .thumb-body {
+      width: 56px;
+      height: 60px;
+      border-radius: 28px 28px 10px 10px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.2) 0%, rgba(15,10,6,0.5) 70%);
+      margin-top: -6px;
+    }
+
+    /* Gradient overlay on thumb — name legibility */
+    .thumb-art::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: linear-gradient(to bottom, transparent, rgba(8,6,4,0.88));
+      border-radius: 0 0 13px 13px;
+    }
+
+    .thumb-name {
+      position: absolute;
+      bottom: 9px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text);
+      letter-spacing: 0.04em;
+      z-index: 1;
+    }
+
+    .companion-role {
+      text-align: center;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      line-height: 1.3;
+    }
+
+    /* ── Group Chats ── */
+    .group-section {
+      padding: 0 22px;
+    }
+
+    .group-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .group-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--text);
+      letter-spacing: 0.02em;
+    }
+
+    .group-new {
+      font-size: 11px;
+      color: var(--gold);
+      opacity: 0.7;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+    }
+
+    .group-new:hover { opacity: 1; }
+
+    .group-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--gold-dim);
+      border-radius: 16px;
+      padding: 18px 18px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: all 0.35s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .group-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 80% at 0% 50%, rgba(201,168,76,0.06) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .group-card:hover {
+      border-color: rgba(201,168,76,0.4);
+      background: rgba(201,168,76,0.04);
+      transform: translateX(3px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+    }
+
+    .group-card:hover::before { opacity: 1; }
+
+    /* Stacked avatar cluster */
+    .avatar-cluster {
+      position: relative;
+      width: 50px;
+      height: 40px;
+      flex-shrink: 0;
+    }
+
+    .cluster-face {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%, rgba(201,168,76,0.3) 0%, rgba(212,160,160,0.15) 50%, rgba(18,12,8,0.95) 80%);
+      border: 1.5px solid rgba(10,10,10,1);
+      position: absolute;
+    }
+
+    .cluster-face:nth-child(1) { left: 0; top: 3px; z-index: 2; border-color: var(--bg); }
+    .cluster-face:nth-child(2) { left: 16px; top: 3px; z-index: 1; border-color: var(--bg); background: radial-gradient(circle at 40% 35%, rgba(212,160,160,0.35) 0%, rgba(201,168,76,0.12) 50%, rgba(18,12,8,0.95) 80%); }
+
+    .group-info { flex: 1; min-width: 0; }
+
+    .group-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--text);
+      letter-spacing: 0.02em;
+      margin-bottom: 3px;
+    }
+
+    .group-members {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .group-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+    }
+
+    .group-time {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .group-unread {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(201,168,76,0.9), rgba(201,168,76,0.6));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 500;
+      color: #0A0A0A;
+      box-shadow: 0 0 8px rgba(201,168,76,0.4);
+    }
+
+    /* Dots menu */
+    .dots-btn {
+      padding: 4px 6px;
+      cursor: pointer;
+      opacity: 0.4;
+      transition: opacity 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      align-items: center;
+    }
+    .dots-btn:hover { opacity: 0.8; }
+    .dots-btn span {
+      display: block;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <a href="/" class="back">← Gallery</a>
+
+  <div class="page">
+
+    <!-- ── HERO ── -->
+    <div class="hero">
+      <div class="hero-art"></div>
+
+      <div class="portrait-wrap">
+        <div class="portrait-glow"></div>
+        <div class="portrait-silhouette">
+          <div class="sil-head"></div>
+          <div class="sil-body"></div>
+        </div>
+      </div>
+
+      <div class="hero-fade"></div>
+
+      <!-- Top bar -->
+      <div class="hero-topbar">
+        <div class="brand">
+          <svg class="brand-icon" viewBox="0 0 30 30" fill="none">
+            <circle cx="15" cy="15" r="14" stroke="rgba(201,168,76,0.4)" stroke-width="1"/>
+            <path d="M9 21 Q9 10 15 10 Q21 10 21 21" stroke="rgba(201,168,76,0.8)" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+            <circle cx="15" cy="8" r="2.5" fill="rgba(201,168,76,0.7)"/>
+          </svg>
+          <span class="brand-name">NySa <span>FloW</span> AI</span>
+        </div>
+        <div class="menu-btn" aria-label="Menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+
+      <!-- Companion overlay info -->
+      <div class="hero-info">
+        <div class="status-line">
+          <div class="status-dot"></div>
+          <span class="status-text">Thinking about you</span>
+        </div>
+        <div class="companion-row">
+          <span class="companion-name">Jen</span>
+          <div class="notif-badge">1</div>
+        </div>
+        <p class="companion-tagline">Expressive, flirt-forward, and hard to ignore.</p>
+      </div>
+    </div>
+
+    <!-- ── SCROLLABLE CONTENT ── -->
+    <div class="content">
+
+      <!-- Companion switcher -->
+      <p class="section-label" style="margin-bottom:12px;">Your companions</p>
+      <div class="companions-row">
+
+        <div class="companion-thumb">
+          <div class="thumb-art">
+            <div class="thumb-sil">
+              <div class="thumb-head" style="background: radial-gradient(circle at 40% 35%, rgba(210,160,90,0.55) 0%, rgba(180,130,80,0.25) 50%, rgba(20,14,8,0.9) 80%);"></div>
+              <div class="thumb-body" style="background: radial-gradient(ellipse at 50% 0%, rgba(210,160,90,0.22) 0%, rgba(15,10,6,0.5) 70%);"></div>
+            </div>
+            <span class="thumb-name">Red</span>
+          </div>
+          <p class="companion-role">The Wildfire</p>
+        </div>
+
+        <div class="companion-thumb">
+          <div class="thumb-art">
+            <div class="thumb-sil">
+              <div class="thumb-head" style="background: radial-gradient(circle at 40% 35%, rgba(160,180,220,0.5) 0%, rgba(130,160,210,0.22) 50%, rgba(18,14,10,0.9) 80%);"></div>
+              <div class="thumb-body" style="background: radial-gradient(ellipse at 50% 0%, rgba(160,180,220,0.2) 0%, rgba(15,10,6,0.5) 70%);"></div>
+            </div>
+            <span class="thumb-name">Lyn</span>
+          </div>
+          <p class="companion-role">The Slow Burn</p>
+        </div>
+
+        <div class="companion-thumb">
+          <div class="thumb-art" style="border-color: rgba(201,168,76,0.45); box-shadow: 0 0 16px rgba(201,168,76,0.1);">
+            <div class="thumb-sil">
+              <div class="thumb-head" style="background: radial-gradient(circle at 40% 35%, rgba(201,168,76,0.52) 0%, rgba(212,160,160,0.28) 50%, rgba(20,14,8,0.9) 80%);"></div>
+              <div class="thumb-body" style="background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.24) 0%, rgba(15,10,6,0.5) 70%);"></div>
+            </div>
+            <span class="thumb-name" style="color: var(--gold);">Holi</span>
+          </div>
+          <p class="companion-role" style="color: var(--gold); opacity: 0.7;">The Muse</p>
+        </div>
+
+        <div class="companion-thumb">
+          <div class="thumb-art">
+            <div class="thumb-sil">
+              <div class="thumb-head" style="background: radial-gradient(circle at 40% 35%, rgba(196,160,212,0.5) 0%, rgba(180,140,200,0.22) 50%, rgba(18,14,10,0.9) 80%);"></div>
+              <div class="thumb-body" style="background: radial-gradient(ellipse at 50% 0%, rgba(196,160,212,0.2) 0%, rgba(15,10,6,0.5) 70%);"></div>
+            </div>
+            <span class="thumb-name">Vivian</span>
+          </div>
+          <p class="companion-role">The Mirror</p>
+        </div>
+
+        <div class="companion-thumb">
+          <div class="thumb-art" style="background: rgba(255,255,255,0.03); border-style: dashed; display:flex; align-items:center; justify-content:center;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(201,168,76,0.35)" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="16"/>
+              <line x1="8" y1="12" x2="16" y2="12"/>
+            </svg>
+          </div>
+          <p class="companion-role" style="text-align:center;">Discover</p>
+        </div>
+
+      </div>
+
+      <!-- Group Chats -->
+      <div class="group-section">
+        <div class="group-header">
+          <h2 class="group-title">Group Chats</h2>
+          <span class="group-new">+ New</span>
+        </div>
+
+        <div class="group-card">
+          <div class="avatar-cluster">
+            <div class="cluster-face"></div>
+            <div class="cluster-face"></div>
+          </div>
+          <div class="group-info">
+            <div class="group-name">Jess &amp; Emma</div>
+            <div class="group-members">Jess &middot; Emma &middot; 2 companions</div>
+          </div>
+          <div class="group-meta">
+            <span class="group-time">11:42 pm</span>
+            <div class="group-unread">3</div>
+          </div>
+        </div>
+
+        <div class="group-card">
+          <div class="avatar-cluster">
+            <div class="cluster-face" style="background: radial-gradient(circle at 40% 35%, rgba(160,180,220,0.45) 0%, rgba(130,160,210,0.2) 50%, rgba(18,14,10,0.95) 80%);"></div>
+            <div class="cluster-face" style="background: radial-gradient(circle at 40% 35%, rgba(210,160,90,0.45) 0%, rgba(180,130,80,0.2) 50%, rgba(18,14,10,0.95) 80%);"></div>
+          </div>
+          <div class="group-info">
+            <div class="group-name">Lyn &amp; Red</div>
+            <div class="group-members">Lyn &middot; Red &middot; 2 companions</div>
+          </div>
+          <div class="group-meta">
+            <span class="group-time">Yesterday</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div><!-- /content -->
+
+  </div><!-- /page -->
+</body>
+</html>
