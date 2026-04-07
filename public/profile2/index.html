@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NySa — Atmosphere</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ════════════════════════════════════════
+       SVG FILTER: Film Grain (Vulnerable)
+    ════════════════════════════════════════ */
+    .svg-filters { position: absolute; width: 0; height: 0; }
+
+    /* ════════════════════════════════════════
+       ROOT & BASE
+    ════════════════════════════════════════ */
+    :root {
+      --gold: #C9A84C;
+      --text: #E8E0D0;
+      --muted: rgba(232,224,208,0.42);
+      --trans: 2.5s ease-out;
+    }
+
+    html, body {
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      background: #000;
+      color: var(--text);
+    }
+
+    /* ── Back link ── */
+    .back {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.55;
+      text-decoration: none;
+      z-index: 200;
+      transition: opacity 0.3s ease;
+    }
+    .back:hover { opacity: 1; }
+
+    /* ════════════════════════════════════════
+       BACKGROUND LAYERS
+       Three absolutely-fixed layers, each
+       transitions opacity on mood change.
+    ════════════════════════════════════════ */
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      opacity: 0;
+      transition: opacity var(--trans);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Connected — deep charcoal, warm gold core */
+    .bg-connected {
+      background:
+        radial-gradient(ellipse 75% 65% at 50% 30%, #1e1710 0%, #0d0b08 50%, #000 100%);
+    }
+
+    /* Vulnerable — dark indigo/violet */
+    .bg-vulnerable {
+      background:
+        radial-gradient(ellipse 75% 65% at 50% 30%, #16112e 0%, #0c0a1c 50%, #000 100%);
+    }
+
+    /* Thinking — true black, faint cool mist */
+    .bg-thinking {
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 30%, #080c0e 0%, #040608 50%, #000 100%);
+    }
+
+    .bg-layer.active { opacity: 1; }
+
+    /* Nebula particles — only visible in Thinking */
+    .nebula { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .mote {
+      position: absolute;
+      border-radius: 50%;
+      background: #fff;
+      opacity: 0;
+      transition: opacity var(--trans);
+      animation: float-mote var(--dur, 10s) ease-in-out var(--delay, 0s) infinite alternate;
+    }
+
+    @keyframes float-mote {
+      0%   { transform: translate(0, 0); }
+      100% { transform: translate(var(--dx, 12px), var(--dy, -18px)); }
+    }
+
+    /* ════════════════════════════════════════
+       SCREEN CONTENT
+    ════════════════════════════════════════ */
+    .screen {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 64px 32px 56px;
+    }
+
+    /* ════════════════════════════════════════
+       MOOD SWITCHER
+    ════════════════════════════════════════ */
+    .mood-switcher {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      margin-bottom: 52px;
+      padding-top: 8px;
+    }
+
+    .mood-btn {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(232,224,208,0.28);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px 0 6px;
+      border-bottom: 1px solid transparent;
+      transition: color 0.4s ease, border-color 0.4s ease;
+      position: relative;
+    }
+
+    .mood-btn.active {
+      color: var(--gold);
+      border-bottom-color: rgba(201,168,76,0.5);
+    }
+
+    .mood-btn:hover:not(.active) { color: rgba(232,224,208,0.55); }
+
+    /* ════════════════════════════════════════
+       ORB SYSTEM
+    ════════════════════════════════════════ */
+    .orb-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: orb-enter 1.2s cubic-bezier(0.22,1,0.36,1) 0.3s forwards;
+    }
+
+    @keyframes orb-enter {
+      from { opacity: 0; transform: scale(0.88); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .orb-wrap {
+      position: relative;
+      width: 172px;
+      height: 172px;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Aura rings — one per mood, opacity-transitioned ── */
+    .aura {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--trans);
+    }
+
+    /* Connected aura — diffuse gold bloom */
+    .aura-connected {
+      inset: -30px;
+      background: radial-gradient(circle,
+        rgba(201,168,76,0.16) 0%,
+        rgba(180,140,60,0.08) 45%,
+        transparent 70%
+      );
+      filter: blur(18px);
+      animation: breathe-c 4s ease-in-out infinite;
+    }
+    @keyframes breathe-c {
+      0%,100% { transform: scale(1);    opacity: 0.9; }
+      50%      { transform: scale(1.1); opacity: 1; }
+    }
+
+    /* Vulnerable aura — heartbeat from amber → purple */
+    .aura-vulnerable {
+      inset: -30px;
+      background: radial-gradient(circle,
+        rgba(140,90,200,0.18) 0%,
+        rgba(200,140,60,0.09) 45%,
+        transparent 70%
+      );
+      filter: blur(18px);
+      animation: heartbeat 2.4s ease-in-out infinite;
+    }
+    @keyframes heartbeat {
+      0%,100% { transform: scale(1);     filter: blur(18px) hue-rotate(0deg);   opacity: 0.8; }
+      30%      { transform: scale(1.08); filter: blur(16px) hue-rotate(30deg);  opacity: 1; }
+      50%      { transform: scale(1);    filter: blur(20px) hue-rotate(-20deg); opacity: 0.7; }
+      80%      { transform: scale(1.06); filter: blur(15px) hue-rotate(20deg);  opacity: 1; }
+    }
+
+    /* Thinking aura — rotating white-gold halo, 20% larger */
+    .aura-thinking-halo {
+      width: calc(172px * 1.2);
+      height: calc(172px * 1.2);
+      border-radius: 50%;
+      background: conic-gradient(
+        transparent 0deg,
+        rgba(220,205,160,0.22) 60deg,
+        rgba(255,248,220,0.08) 120deg,
+        transparent 180deg,
+        rgba(200,190,150,0.14) 240deg,
+        transparent 300deg,
+        transparent 360deg
+      );
+      animation: spin-halo 7s linear infinite;
+    }
+    @keyframes spin-halo { to { transform: rotate(360deg); } }
+
+    .aura-thinking-bloom {
+      inset: -24px;
+      background: radial-gradient(circle,
+        rgba(200,210,220,0.1) 0%,
+        rgba(180,200,220,0.05) 40%,
+        transparent 70%
+      );
+      filter: blur(14px);
+      animation: breathe-t 5s ease-in-out infinite;
+    }
+    @keyframes breathe-t {
+      0%,100% { opacity: 0.7; transform: scale(1); }
+      50%      { opacity: 1;   transform: scale(1.06); }
+    }
+
+    /* ── Orb itself ── */
+    .orb {
+      position: relative;
+      z-index: 2;
+      width: 172px;
+      height: 172px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+
+      /* Soft vignette border — no hard line */
+      box-shadow:
+        0 0 0 1px rgba(201,168,76,0.14),
+        0 0 32px 4px rgba(0,0,0,0.6);
+
+      transition: box-shadow var(--trans);
+    }
+
+    /* Mood-specific orb ring */
+    [data-mood="connected"] .orb {
+      box-shadow:
+        0 0 0 1px rgba(201,168,76,0.2),
+        0 0 24px 6px rgba(201,168,76,0.1),
+        0 0 60px 12px rgba(0,0,0,0.5);
+    }
+    [data-mood="vulnerable"] .orb {
+      box-shadow:
+        0 0 0 1px rgba(120,80,200,0.18),
+        0 0 24px 6px rgba(100,70,180,0.1),
+        0 0 60px 12px rgba(0,0,0,0.6);
+    }
+    [data-mood="thinking"] .orb {
+      box-shadow:
+        0 0 0 1px rgba(200,210,220,0.12),
+        0 0 24px 6px rgba(180,200,220,0.08),
+        0 0 60px 12px rgba(0,0,0,0.7);
+    }
+
+    /* Photo */
+    .orb-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      border-radius: 50%;
+      display: block;
+      transition: filter var(--trans), opacity var(--trans);
+
+      /* Radial mask — photo edges dissolve into background, no hard crop */
+      mask-image: radial-gradient(circle, black 50%, rgba(0,0,0,0.6) 68%, transparent 86%);
+      -webkit-mask-image: radial-gradient(circle, black 50%, rgba(0,0,0,0.6) 68%, transparent 86%);
+    }
+
+    [data-mood="connected"] .orb-img {
+      filter: brightness(1.1) saturate(1.0);
+      opacity: 1;
+    }
+    [data-mood="vulnerable"] .orb-img {
+      filter: saturate(0.85) contrast(1.1) brightness(0.97);
+      opacity: 1;
+    }
+    [data-mood="thinking"] .orb-img {
+      filter: saturate(0.88) brightness(0.9) blur(1.5px);
+      opacity: 0.9;
+    }
+
+    /* Color-blend overlay — tints the photo to match background mood */
+    .photo-blend {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 3;
+      transition: background var(--trans), opacity var(--trans);
+      mix-blend-mode: soft-light;
+      mask-image: radial-gradient(circle, black 50%, transparent 86%);
+      -webkit-mask-image: radial-gradient(circle, black 50%, transparent 86%);
+    }
+    [data-mood="connected"]  .photo-blend { background: rgba(201,168,76,0.28); opacity: 1; }
+    [data-mood="vulnerable"] .photo-blend { background: rgba(90,60,160,0.32); opacity: 1; }
+    [data-mood="thinking"]   .photo-blend { background: rgba(180,200,220,0.2); opacity: 1; }
+
+    /* Light-leak top-left (Connected only) */
+    .light-leak {
+      position: absolute;
+      top: -8px;
+      left: -8px;
+      width: 70%;
+      height: 70%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 20% 20%,
+        rgba(201,168,76,0.22) 0%,
+        transparent 65%
+      );
+      pointer-events: none;
+      z-index: 4;
+      opacity: 0;
+      transition: opacity var(--trans);
+      mix-blend-mode: overlay;
+    }
+    [data-mood="connected"] .light-leak { opacity: 1; }
+
+    /* Film grain (Vulnerable) */
+    .grain-overlay {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 5;
+      opacity: 0;
+      transition: opacity var(--trans);
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+      background-size: cover;
+      mix-blend-mode: overlay;
+    }
+    [data-mood="vulnerable"] .grain-overlay { opacity: 1; }
+
+    /* Cool highlight (Thinking) */
+    .cool-highlight {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      width: 60%;
+      height: 60%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 70% 20%,
+        rgba(200,215,230,0.18) 0%,
+        transparent 65%
+      );
+      pointer-events: none;
+      z-index: 4;
+      opacity: 0;
+      transition: opacity var(--trans);
+      mix-blend-mode: screen;
+    }
+    [data-mood="thinking"] .cool-highlight { opacity: 1; }
+
+    /* ── Active aura visibility per mood ── */
+    [data-mood="connected"]  .aura-connected  { opacity: 1; }
+    [data-mood="vulnerable"] .aura-vulnerable { opacity: 1; }
+    [data-mood="thinking"]   .aura-thinking-halo  { opacity: 1; }
+    [data-mood="thinking"]   .aura-thinking-bloom { opacity: 1; }
+
+    /* ════════════════════════════════════════
+       ARCHETYPE + NAME
+    ════════════════════════════════════════ */
+    .archetype-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      opacity: 0.65;
+      margin-bottom: 10px;
+      transition: color var(--trans);
+    }
+    [data-mood="connected"]  .archetype-label { color: var(--gold); }
+    [data-mood="vulnerable"] .archetype-label { color: #a08cc8; }
+    [data-mood="thinking"]   .archetype-label { color: #a8b8c8; }
+
+    .companion-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 52px;
+      letter-spacing: 0.03em;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .bond-status {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px;
+      font-style: italic;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    /* ════════════════════════════════════════
+       MOOD DESCRIPTOR — changes per state
+    ════════════════════════════════════════ */
+    .mood-descriptor {
+      margin-top: 8px;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.45;
+      transition: color var(--trans), opacity 0.6s ease;
+    }
+    [data-mood="connected"]  .mood-descriptor { color: var(--gold); }
+    [data-mood="vulnerable"] .mood-descriptor { color: #b09ad0; }
+    [data-mood="thinking"]   .mood-descriptor { color: #90a8b8; }
+
+    /* ════════════════════════════════════════
+       ATTRIBUTES
+    ════════════════════════════════════════ */
+    .attributes {
+      text-align: center;
+      margin: 28px 0 32px;
+      line-height: 2.1;
+      opacity: 0;
+      animation: fade-up 0.7s ease 1.0s forwards;
+    }
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .attributes p {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 15px;
+      color: rgba(232,224,208,0.62);
+      letter-spacing: 0.04em;
+    }
+
+    .attr-dot {
+      display: inline-block;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0.45;
+      vertical-align: middle;
+      margin: 0 10px;
+      transition: background var(--trans);
+    }
+    [data-mood="vulnerable"] .attr-dot { background: #b09ad0; }
+    [data-mood="thinking"]   .attr-dot { background: #90a8b8; }
+
+    /* ════════════════════════════════════════
+       STATS — fluid, no boxes
+    ════════════════════════════════════════ */
+    .stats {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      width: 100%;
+      margin-bottom: 36px;
+    }
+
+    .stat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+    }
+    .stat.visible { animation: stat-in 0.5s ease forwards; }
+    @keyframes stat-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 38px;
+      line-height: 1;
+      color: var(--text);
+      margin-bottom: 5px;
+      letter-spacing: -0.01em;
+    }
+
+    .stat-label {
+      font-size: 9px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .stat-sep {
+      width: 1px;
+      height: 28px;
+      background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.2), transparent);
+      align-self: center;
+      flex-shrink: 0;
+      transition: background var(--trans);
+    }
+    [data-mood="vulnerable"] .stat-sep {
+      background: linear-gradient(to bottom, transparent, rgba(140,100,220,0.2), transparent);
+    }
+    [data-mood="thinking"] .stat-sep {
+      background: linear-gradient(to bottom, transparent, rgba(160,190,210,0.15), transparent);
+    }
+
+    /* ════════════════════════════════════════
+       BOND DEPTH
+    ════════════════════════════════════════ */
+    .bond-section {
+      width: 100%;
+      margin-bottom: 44px;
+      opacity: 0;
+      animation: fade-up 0.7s ease 1.3s forwards;
+    }
+
+    .bond-top {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .bond-word {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .bond-state {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 16px;
+      letter-spacing: 0.05em;
+      transition: color var(--trans);
+    }
+    [data-mood="connected"]  .bond-state { color: rgba(201,168,76,0.75); }
+    [data-mood="vulnerable"] .bond-state { color: rgba(160,120,220,0.75); }
+    [data-mood="thinking"]   .bond-state { color: rgba(160,190,210,0.75); }
+
+    .bond-trail {
+      position: relative;
+      height: 6px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .bond-fill {
+      position: absolute;
+      left: 0; top: 0;
+      height: 100%;
+      width: 63%;
+      border-radius: 6px;
+      filter: blur(1.5px);
+      transition: background var(--trans), box-shadow var(--trans);
+    }
+    [data-mood="connected"] .bond-fill {
+      background: linear-gradient(90deg, transparent 0%, rgba(201,168,76,0.3) 25%, rgba(201,168,76,0.8) 100%);
+      box-shadow: 0 0 14px 4px rgba(201,168,76,0.18);
+    }
+    [data-mood="vulnerable"] .bond-fill {
+      background: linear-gradient(90deg, transparent 0%, rgba(120,80,200,0.35) 25%, rgba(150,100,220,0.8) 100%);
+      box-shadow: 0 0 14px 4px rgba(130,90,210,0.2);
+    }
+    [data-mood="thinking"] .bond-fill {
+      background: linear-gradient(90deg, transparent 0%, rgba(160,190,210,0.3) 25%, rgba(190,210,225,0.7) 100%);
+      box-shadow: 0 0 14px 4px rgba(180,200,220,0.15);
+    }
+
+    .bond-fill::after {
+      content: '';
+      position: absolute;
+      right: -2px; top: 50%;
+      transform: translateY(-50%);
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      filter: blur(0.5px);
+      transition: background var(--trans), box-shadow var(--trans);
+    }
+    [data-mood="connected"] .bond-fill::after {
+      background: rgba(201,168,76,0.9);
+      box-shadow: 0 0 10px 4px rgba(201,168,76,0.4), 0 0 24px 8px rgba(201,168,76,0.15);
+    }
+    [data-mood="vulnerable"] .bond-fill::after {
+      background: rgba(150,100,220,0.9);
+      box-shadow: 0 0 10px 4px rgba(140,90,210,0.45), 0 0 24px 8px rgba(130,80,200,0.18);
+    }
+    [data-mood="thinking"] .bond-fill::after {
+      background: rgba(190,210,225,0.85);
+      box-shadow: 0 0 10px 4px rgba(180,205,220,0.35), 0 0 24px 8px rgba(170,195,215,0.12);
+    }
+
+    /* ════════════════════════════════════════
+       CTA — Ghost button
+    ════════════════════════════════════════ */
+    .enter-btn {
+      width: 100%;
+      padding: 20px 24px;
+      background: transparent;
+      border-radius: 14px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 21px;
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      animation: fade-up 0.7s ease 1.5s forwards;
+      transition: border-color var(--trans), color var(--trans), box-shadow var(--trans);
+    }
+
+    [data-mood="connected"] .enter-btn {
+      border: 1px solid rgba(201,168,76,0.32);
+      color: rgba(232,224,208,0.85);
+      box-shadow: inset 0 0 20px rgba(201,168,76,0.04);
+    }
+    [data-mood="vulnerable"] .enter-btn {
+      border: 1px solid rgba(130,90,200,0.28);
+      color: rgba(220,210,235,0.85);
+      box-shadow: inset 0 0 20px rgba(120,80,190,0.05);
+    }
+    [data-mood="thinking"] .enter-btn {
+      border: 1px solid rgba(170,195,215,0.22);
+      color: rgba(210,220,228,0.8);
+      box-shadow: inset 0 0 20px rgba(170,200,220,0.04);
+    }
+
+    .enter-btn:hover { animation: border-pulse 2s ease-in-out infinite; }
+
+    @keyframes border-pulse {
+      0%,100% { box-shadow: inset 0 0 20px rgba(201,168,76,0.05), 0 0 0 rgba(201,168,76,0); }
+      50%      { box-shadow: inset 0 0 28px rgba(201,168,76,0.1), 0 0 18px 2px rgba(201,168,76,0.1); }
+    }
+
+    .enter-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+      transition: left 0.7s ease;
+    }
+    .enter-btn:hover::before { left: 100%; }
+  </style>
+</head>
+<body>
+  <!-- SVG filter defs -->
+  <svg class="svg-filters" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="grain">
+        <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="4" stitchTiles="stitch" result="noise"/>
+        <feColorMatrix type="saturate" values="0" in="noise" result="grey"/>
+        <feBlend in="SourceGraphic" in2="grey" mode="overlay"/>
+      </filter>
+    </defs>
+  </svg>
+
+  <a href="/" class="back">← Gallery</a>
+
+  <!-- Background layers -->
+  <div class="bg-layer bg-connected active"></div>
+  <div class="bg-layer bg-vulnerable"></div>
+  <div class="bg-layer bg-thinking"></div>
+
+  <!-- Nebula motes (thinking state) -->
+  <div class="nebula" id="nebula"></div>
+
+  <!-- MAIN CONTENT — data-mood drives all child states -->
+  <div class="screen" id="stage" data-mood="connected">
+
+    <!-- Mood switcher -->
+    <div class="mood-switcher">
+      <button class="mood-btn active" data-mood="connected">Connected</button>
+      <button class="mood-btn" data-mood="vulnerable">Vulnerable</button>
+      <button class="mood-btn" data-mood="thinking">Thinking</button>
+    </div>
+
+    <!-- ORB -->
+    <div class="orb-section">
+      <div class="orb-wrap">
+        <!-- Auras -->
+        <div class="aura aura-connected"></div>
+        <div class="aura aura-vulnerable"></div>
+        <div class="aura aura-thinking-halo"></div>
+        <div class="aura aura-thinking-bloom"></div>
+
+        <!-- Orb -->
+        <div class="orb">
+          <img src="/profile/nysa1.jpg" class="orb-img" alt="NySa" />
+          <div class="photo-blend"></div>
+          <div class="light-leak"></div>
+          <div class="grain-overlay"></div>
+          <div class="cool-highlight"></div>
+        </div>
+      </div>
+
+      <p class="archetype-label">The Slow Burn</p>
+      <h1 class="companion-name">NySa</h1>
+      <p class="bond-status">Day 47 &mdash; Deepening</p>
+      <p class="mood-descriptor" id="moodLabel">Present &middot; Warm &middot; Close</p>
+    </div>
+
+    <!-- ATTRIBUTES -->
+    <div class="attributes">
+      <p>
+        <em>Emotionally perceptive</em>
+        <span class="attr-dot"></span>
+        <em>Patient</em>
+        <span class="attr-dot"></span>
+        <em>Quietly intense</em>
+      </p>
+      <p>
+        <em>Remembers everything</em>
+        <span class="attr-dot"></span>
+        <em>Speaks only when it matters</em>
+      </p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats" id="stats">
+      <div class="stat" data-delay="0">
+        <div class="stat-num">47</div>
+        <div class="stat-label">Days<br/>Together</div>
+      </div>
+      <div class="stat-sep"></div>
+      <div class="stat" data-delay="120">
+        <div class="stat-num">312</div>
+        <div class="stat-label">Shared<br/>Moments</div>
+      </div>
+      <div class="stat-sep"></div>
+      <div class="stat" data-delay="240">
+        <div class="stat-num">18</div>
+        <div class="stat-label">Memories<br/>Held</div>
+      </div>
+    </div>
+
+    <!-- BOND -->
+    <div class="bond-section">
+      <div class="bond-top">
+        <span class="bond-word">Bond Depth</span>
+        <span class="bond-state" id="bondPhrase">Deepening — something is beginning to settle.</span>
+      </div>
+      <div class="bond-trail">
+        <div class="bond-fill"></div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <button class="enter-btn">Enter Conversation</button>
+
+  </div><!-- /screen -->
+
+  <script>
+    // ── Stagger stats in ──
+    document.querySelectorAll('.stat').forEach(s => {
+      const delay = parseInt(s.dataset.delay) + 900;
+      setTimeout(() => s.classList.add('visible'), delay);
+    });
+
+    // ── Mood copy map ──
+    const moodCopy = {
+      connected:  { label: 'Present \u00B7 Warm \u00B7 Close',         bond: 'Deepening \u2014 something is beginning to settle.' },
+      vulnerable: { label: 'Open \u00B7 Tender \u00B7 Unguarded',      bond: 'Something in you is reaching for the light.' },
+      thinking:   { label: 'Distant \u00B7 Processing \u00B7 Turning inward', bond: 'She is holding your words. Carefully.' }
+    };
+
+    // ── Nebula mote builder ──
+    const nebula = document.getElementById('nebula');
+    for (let i = 0; i < 28; i++) {
+      const m = document.createElement('div');
+      m.className = 'mote';
+      const size = Math.random() * 2 + 1;
+      m.style.cssText = [
+        `width:${size}px`, `height:${size}px`,
+        `left:${Math.random()*100}%`, `top:${Math.random()*100}%`,
+        `--dur:${8 + Math.random()*10}s`,
+        `--delay:${-Math.random()*10}s`,
+        `--dx:${(Math.random()-0.5)*30}px`,
+        `--dy:${(Math.random()-0.5)*30}px`
+      ].join(';');
+      nebula.appendChild(m);
+    }
+
+    // ── Background layer switcher ──
+    const bgLayers = {
+      connected:  document.querySelector('.bg-connected'),
+      vulnerable: document.querySelector('.bg-vulnerable'),
+      thinking:   document.querySelector('.bg-thinking')
+    };
+
+    // ── Motes visible only in thinking ──
+    const motes = document.querySelectorAll('.mote');
+
+    function setMood(mood) {
+      const stage = document.getElementById('stage');
+      const prevMood = stage.dataset.mood;
+      if (prevMood === mood) return;
+
+      // Update data-mood on stage (all CSS [data-mood] rules fire)
+      stage.dataset.mood = mood;
+
+      // Swap background layers
+      Object.entries(bgLayers).forEach(([m, el]) => {
+        el.classList.toggle('active', m === mood);
+      });
+
+      // Toggle nebula motes
+      motes.forEach(m => { m.style.opacity = mood === 'thinking' ? '0.035' : '0'; });
+
+      // Swap button active state
+      document.querySelectorAll('.mood-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.mood === mood);
+      });
+
+      // Update copy
+      const copy = moodCopy[mood];
+      document.getElementById('moodLabel').textContent = copy.label;
+      document.getElementById('bondPhrase').textContent = copy.bond;
+    }
+
+    // ── Wire buttons ──
+    document.querySelectorAll('.mood-btn').forEach(btn => {
+      btn.addEventListener('click', () => setMood(btn.dataset.mood));
+    });
+  </script>
+</body>
+</html>
