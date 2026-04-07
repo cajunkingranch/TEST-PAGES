@@ -204,8 +204,14 @@
       50%       { opacity: 1;   transform: scale(1.1) translate(2%, -2%); }
     }
 
-    /* Silhouette */
-    .orb svg { position: relative; z-index: 1; opacity: 0.28; }
+    /* Photo */
+    .orb-img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      border-radius: 50%;
+      opacity: 0.88;
+      position: relative; z-index: 1;
+    }
 
     /* ── Archetype + name ── */
     .archetype-label {
@@ -484,10 +490,7 @@
         <div class="orb-ring-outer"></div>
         <div class="orb-ring-mid"></div>
         <div class="orb">
-          <svg width="56" height="56" viewBox="0 0 70 70" fill="none">
-            <circle cx="35" cy="24" r="13" fill="rgba(201,168,76,0.75)"/>
-            <path d="M10 62 Q10 44 35 44 Q60 44 60 62" fill="rgba(201,168,76,0.75)"/>
-          </svg>
+          <img src="/profile/nysa1.jpg" class="orb-img" alt="NySa" />
         </div>
       </div>
 

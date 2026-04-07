@@ -122,15 +122,18 @@
       50% { opacity: 1; transform: scale(1.08); }
     }
 
+    .avatar-img { width: 100%; height: 100%; object-fit: cover; object-position: center top; border-radius: 50%; }
+
     .avatar {
       width: 110px;
       height: 110px;
       border-radius: 50%;
-      background: radial-gradient(circle at 38% 30%, rgba(201,168,76,0.28) 0%, rgba(212,160,160,0.14) 45%, rgba(12,8,6,0.95) 75%);
+      background: rgba(12,8,6,0.95);
       border: 1px solid rgba(201,168,76,0.28);
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
       position: relative;
       z-index: 1;
       box-shadow: 0 0 40px rgba(201,168,76,0.08);
@@ -357,10 +360,7 @@
       <div class="avatar-wrap">
         <div class="avatar-glow"></div>
         <div class="avatar">
-          <svg width="44" height="44" viewBox="0 0 70 70" fill="none" opacity="0.35">
-            <circle cx="35" cy="24" r="13" fill="rgba(201,168,76,0.8)"/>
-            <path d="M10 62 Q10 44 35 44 Q60 44 60 62" fill="rgba(201,168,76,0.8)"/>
-          </svg>
+          <img src="/profile/nysa1.jpg" class="avatar-img" alt="NySa" />
         </div>
       </div>
 

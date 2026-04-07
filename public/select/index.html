@@ -70,13 +70,42 @@
       box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px var(--gold-dim);
     }
 
-    /* Silhouette avatar — full bleed atmospheric art */
+    /* Hero photo */
+    .hero-img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      z-index: 1;
+    }
+
+    /* Thumb photo */
+    .thumb-img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      border-radius: 13px;
+      z-index: 0;
+    }
+
+    /* Cluster face photo */
+    .cluster-img {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      object-fit: cover; object-position: center top;
+      border: 1.5px solid var(--bg);
+      position: absolute;
+    }
+    .cluster-img:nth-child(1) { left: 0; top: 3px; z-index: 2; }
+    .cluster-img:nth-child(2) { left: 16px; top: 3px; z-index: 1; }
+
+    /* Atmospheric overlay — sits above photo, tints + darkens top */
     .hero-art {
       position: absolute;
       inset: 0;
+      z-index: 2;
       background:
-        radial-gradient(ellipse 70% 80% at 50% 25%, rgba(201,168,76,0.13) 0%, rgba(212,160,160,0.1) 35%, transparent 65%),
-        radial-gradient(ellipse 100% 100% at 50% 0%, rgba(30,22,14,1) 0%, rgba(10,10,10,1) 100%);
+        radial-gradient(ellipse 70% 80% at 50% 25%, rgba(201,168,76,0.08) 0%, rgba(212,160,160,0.06) 35%, transparent 65%),
+        linear-gradient(to bottom, rgba(10,10,10,0.55) 0%, transparent 40%);
     }
 
     /* Atmospheric portrait placeholder */
@@ -163,7 +192,7 @@
         rgba(10,10,10,0.92) 75%,
         rgba(10,10,10,1) 100%
       );
-      z-index: 2;
+      z-index: 3;
     }
 
     /* Top bar inside hero */
@@ -594,12 +623,9 @@
     <div class="hero">
       <div class="hero-art"></div>
 
+      <img class="hero-img" src="/profile/nysa1.jpg" alt="Jen" />
       <div class="portrait-wrap">
         <div class="portrait-glow"></div>
-        <div class="portrait-silhouette">
-          <div class="sil-head"></div>
-          <div class="sil-body"></div>
-        </div>
       </div>
 
       <div class="hero-fade"></div>
@@ -644,10 +670,7 @@
 
         <div class="companion-thumb">
           <div class="thumb-art">
-            <div class="thumb-sil">
-              <div class="thumb-head" style="background: radial-gradient(circle at 40% 35%, rgba(210,160,90,0.55) 0%, rgba(180,130,80,0.25) 50%, rgba(20,14,8,0.9) 80%);"></div>
-              <div class="thumb-body" style="background: radial-gradient(ellipse at 50% 0%, rgba(210,160,90,0.22) 0%, rgba(15,10,6,0.5) 70%);"></div>
-            </div>
+            <img class="thumb-img" src="/profile/nysa2.jpg" alt="Red" />
             <span class="thumb-name">Red</span>
           </div>
           <p class="companion-role">The Wildfire</p>
@@ -655,10 +678,7 @@
 
         <div class="companion-thumb">
           <div class="thumb-art">
-            <div class="thumb-sil">
-              <div class="thumb-head" style="background: radial-gradient(circle at 40% 35%, rgba(160,180,220,0.5) 0%, rgba(130,160,210,0.22) 50%, rgba(18,14,10,0.9) 80%);"></div>
-              <div class="thumb-body" style="background: radial-gradient(ellipse at 50% 0%, rgba(160,180,220,0.2) 0%, rgba(15,10,6,0.5) 70%);"></div>
-            </div>
+            <img class="thumb-img" src="/profile/nysa3.jpg" alt="Lyn" />
             <span class="thumb-name">Lyn</span>
           </div>
           <p class="companion-role">The Slow Burn</p>
@@ -666,10 +686,7 @@
 
         <div class="companion-thumb">
           <div class="thumb-art" style="border-color: rgba(201,168,76,0.45); box-shadow: 0 0 16px rgba(201,168,76,0.1);">
-            <div class="thumb-sil">
-              <div class="thumb-head" style="background: radial-gradient(circle at 40% 35%, rgba(201,168,76,0.52) 0%, rgba(212,160,160,0.28) 50%, rgba(20,14,8,0.9) 80%);"></div>
-              <div class="thumb-body" style="background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.24) 0%, rgba(15,10,6,0.5) 70%);"></div>
-            </div>
+            <img class="thumb-img" src="/profile/nysa1.jpg" alt="Holi" />
             <span class="thumb-name" style="color: var(--gold);">Holi</span>
           </div>
           <p class="companion-role" style="color: var(--gold); opacity: 0.7;">The Muse</p>
@@ -677,10 +694,7 @@
 
         <div class="companion-thumb">
           <div class="thumb-art">
-            <div class="thumb-sil">
-              <div class="thumb-head" style="background: radial-gradient(circle at 40% 35%, rgba(196,160,212,0.5) 0%, rgba(180,140,200,0.22) 50%, rgba(18,14,10,0.9) 80%);"></div>
-              <div class="thumb-body" style="background: radial-gradient(ellipse at 50% 0%, rgba(196,160,212,0.2) 0%, rgba(15,10,6,0.5) 70%);"></div>
-            </div>
+            <img class="thumb-img" src="/profile/nysa2.jpg" alt="Vivian" />
             <span class="thumb-name">Vivian</span>
           </div>
           <p class="companion-role">The Mirror</p>
@@ -708,8 +722,8 @@
 
         <div class="group-card">
           <div class="avatar-cluster">
-            <div class="cluster-face"></div>
-            <div class="cluster-face"></div>
+            <img class="cluster-img" src="/profile/nysa2.jpg" alt="Jess" />
+            <img class="cluster-img" src="/profile/nysa3.jpg" alt="Emma" />
           </div>
           <div class="group-info">
             <div class="group-name">Jess &amp; Emma</div>
@@ -723,8 +737,8 @@
 
         <div class="group-card">
           <div class="avatar-cluster">
-            <div class="cluster-face" style="background: radial-gradient(circle at 40% 35%, rgba(160,180,220,0.45) 0%, rgba(130,160,210,0.2) 50%, rgba(18,14,10,0.95) 80%);"></div>
-            <div class="cluster-face" style="background: radial-gradient(circle at 40% 35%, rgba(210,160,90,0.45) 0%, rgba(180,130,80,0.2) 50%, rgba(18,14,10,0.95) 80%);"></div>
+            <img class="cluster-img" src="/profile/nysa3.jpg" alt="Lyn" />
+            <img class="cluster-img" src="/profile/nysa2.jpg" alt="Red" />
           </div>
           <div class="group-info">
             <div class="group-name">Lyn &amp; Red</div>
