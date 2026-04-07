@@ -28,9 +28,17 @@
       backdrop-filter: blur(20px);
       border-bottom: 1px solid rgba(201,168,76,0.1);
     }
-    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
     .brand-icon { width: 64px; height: 64px; object-fit: contain; }
-    .brand-wordmark { height: 50px; object-fit: contain; max-width: 300px; }
+    .brand-wordmark-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 28px;
+      color: var(--text);
+      letter-spacing: 0.01em;
+      line-height: 1;
+    }
+    .brand-wordmark-text em { color: var(--gold); font-style: italic; }
     .header-cta {
       padding: 10px 20px;
       background: linear-gradient(135deg, rgba(201,168,76,0.9), rgba(201,168,76,0.65));
@@ -199,7 +207,7 @@
   <header>
     <a href="/landing/" class="brand">
       <img class="brand-icon" src="/Logos/nysa-logo.svg.png" alt="NySa" />
-      <img class="brand-wordmark" src="/Logos/nysa-wordmark.svg" alt="NySa FloW AI" />
+      <span class="brand-wordmark-text">NySa <em>FloW</em> AI</span>
     </a>
     <a href="/signup/" class="header-cta">Get Started</a>
   </header>
