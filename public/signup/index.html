@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NySa FloW AI — Create Account</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --gold: #C9A84C;
+      --gold-dim: rgba(201,168,76,0.22);
+      --bg: #0A0A0A;
+      --text: #E8E0D0;
+      --muted: rgba(232,224,208,0.45);
+    }
+    html, body {
+      min-height: 100vh;
+      background: var(--bg); color: var(--text);
+      font-family: 'Inter', sans-serif; font-weight: 300;
+      display: flex; flex-direction: column;
+    }
+    body {
+      background-image:
+        radial-gradient(ellipse 80% 55% at 50% -5%, rgba(201,168,76,0.07) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 35% at 20% 90%, rgba(201,168,76,0.03) 0%, transparent 55%);
+    }
+
+    /* HEADER */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 24px;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+    }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .brand-icon { width: 32px; height: 32px; object-fit: contain; }
+    .brand-wordmark { height: 20px; object-fit: contain; max-width: 130px; }
+    .header-cta {
+      padding: 10px 20px;
+      background: linear-gradient(135deg, rgba(201,168,76,0.9), rgba(201,168,76,0.65));
+      border: none; border-radius: 10px;
+      font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500;
+      color: #0A0A0A; cursor: pointer; text-decoration: none;
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+    .header-cta:hover { box-shadow: 0 0 24px rgba(201,168,76,0.35); transform: translateY(-1px); }
+
+    /* MAIN */
+    main {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 100px 24px 60px;
+    }
+
+    /* FORM CARD */
+    .form-card {
+      width: 100%; max-width: 420px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--gold-dim);
+      border-radius: 20px;
+      padding: 36px 32px;
+      backdrop-filter: blur(20px);
+    }
+
+    /* STEP PROGRESS */
+    .step-progress { display: flex; align-items: center; gap: 0; margin-bottom: 28px; }
+    .step-pill {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 16px; border-radius: 20px;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+      transition: background 0.3s, color 0.3s;
+    }
+    .step-pill.active {
+      background: rgba(201,168,76,0.85);
+      color: #0A0A0A;
+    }
+    .step-pill.inactive { color: var(--muted); }
+    .step-connector { flex: 1; height: 1px; background: rgba(255,255,255,0.08); margin: 0 4px; }
+
+    /* HEADING */
+    .card-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400; font-size: 28px;
+      color: var(--text); text-align: center; margin-bottom: 5px;
+    }
+    .card-sub { font-size: 13px; color: var(--muted); text-align: center; margin-bottom: 28px; }
+
+    /* FIELDS */
+    .field { margin-bottom: 18px; }
+    .field-label {
+      display: block; font-size: 10px; font-weight: 500;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 7px;
+    }
+    .field-input {
+      width: 100%; padding: 14px 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 300;
+      color: var(--text); outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+    }
+    .field-input::placeholder { color: rgba(232,224,208,0.28); }
+    .field-input:focus {
+      border-color: rgba(201,168,76,0.5);
+      box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
+    }
+
+    /* PASSWORD STRENGTH */
+    .pw-hint { font-size: 11px; color: var(--muted); margin-top: 5px; }
+
+    /* CHECKBOXES */
+    .checks { margin-bottom: 24px; display: flex; flex-direction: column; gap: 12px; }
+    .check-row { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
+    .check-box {
+      width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px;
+      border: 1.5px solid rgba(255,255,255,0.15);
+      border-radius: 4px; background: rgba(255,255,255,0.04);
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.2s, background 0.2s;
+      cursor: pointer;
+    }
+    .check-box.checked {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.15);
+    }
+    .check-mark { display: none; }
+    .check-box.checked .check-mark { display: block; }
+    .check-label { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .check-label a { color: var(--gold); text-decoration: none; }
+    .check-label a:hover { text-decoration: underline; }
+
+    /* SUBMIT */
+    .submit-btn {
+      width: 100%; padding: 16px;
+      background: linear-gradient(135deg, rgba(201,168,76,0.9), rgba(201,168,76,0.65));
+      border: none; border-radius: 13px;
+      font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500;
+      color: #0A0A0A; cursor: pointer;
+      box-shadow: 0 0 24px rgba(201,168,76,0.15);
+      transition: box-shadow 0.3s, transform 0.3s;
+      margin-bottom: 18px;
+    }
+    .submit-btn:hover { box-shadow: 0 0 40px rgba(201,168,76,0.35); transform: translateY(-1px); }
+
+    .alt-link { font-size: 13px; color: var(--muted); text-align: center; }
+    .alt-link a { color: var(--gold); text-decoration: none; font-weight: 400; }
+    .alt-link a:hover { text-decoration: underline; }
+
+    /* FOOTER */
+    footer {
+      background: rgba(0,0,0,0.4);
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding: 48px 28px 32px;
+    }
+    .footer-inner { max-width: 900px; margin: 0 auto; }
+    .footer-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .footer-brand-icon { width: 26px; height: 26px; object-fit: contain; opacity: 0.6; }
+    .footer-brand-wordmark { height: 16px; object-fit: contain; opacity: 0.6; }
+    .footer-tagline { font-size: 12px; color: var(--muted); margin-bottom: 32px; }
+    .footer-links { display: grid; grid-template-columns: repeat(3, auto); gap: 32px; justify-content: start; margin-bottom: 36px; }
+    .footer-col-heading { font-size: 9px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); opacity: 0.65; margin-bottom: 10px; }
+    .footer-col a { display: block; font-size: 12px; color: var(--muted); text-decoration: none; margin-bottom: 7px; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--text); }
+    .footer-copy { font-size: 11px; color: rgba(232,224,208,0.2); border-top: 1px solid rgba(255,255,255,0.04); padding-top: 20px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="/landing/" class="brand">
+      <img class="brand-icon" src="/Logos/nysa-logo.svg.png" alt="NySa" />
+      <img class="brand-wordmark" src="/Logos/nysa-wordmark.svg" alt="NySa FloW AI" />
+    </a>
+    <a href="/signup/" class="header-cta">Get Started</a>
+  </header>
+
+  <main>
+    <div class="form-card">
+      <div class="step-progress">
+        <div class="step-pill active">1. Account</div>
+        <div class="step-connector"></div>
+        <div class="step-pill inactive">2. Plan</div>
+      </div>
+
+      <h1 class="card-heading">Create Your Account</h1>
+      <p class="card-sub">Begin your private companion experience</p>
+
+      <div class="field">
+        <label class="field-label" for="email">Email</label>
+        <input class="field-input" id="email" type="email" placeholder="you@example.com" autocomplete="email" />
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="password">Password</label>
+        <input class="field-input" id="password" type="password" placeholder="At least 8 characters" autocomplete="new-password" />
+        <p class="pw-hint" id="pw-hint"></p>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="confirm">Confirm Password</label>
+        <input class="field-input" id="confirm" type="password" placeholder="Repeat your password" autocomplete="new-password" />
+      </div>
+
+      <div class="checks">
+        <label class="check-row" onclick="toggleCheck('c1')">
+          <div class="check-box" id="c1">
+            <svg class="check-mark" width="10" height="10" viewBox="0 0 12 12" fill="none">
+              <path d="M2 6l3 3 5-5" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="check-label">I confirm I am 18 years of age or older</span>
+        </label>
+        <label class="check-row" onclick="toggleCheck('c2')">
+          <div class="check-box" id="c2">
+            <svg class="check-mark" width="10" height="10" viewBox="0 0 12 12" fill="none">
+              <path d="M2 6l3 3 5-5" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="check-label">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
+        </label>
+      </div>
+
+      <button class="submit-btn">Continue to Plan Selection</button>
+      <p class="alt-link">Already have an account? <a href="/login/">Sign in</a></p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img class="footer-brand-icon" src="/Logos/nysa-logo.svg.png" alt="NySa" />
+        <img class="footer-brand-wordmark" src="/Logos/nysa-wordmark.svg" alt="NySa FloW AI" />
+      </div>
+      <p class="footer-tagline">Your private AI companion experience</p>
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-heading">Product</div>
+          <a href="/pricing/">Pricing</a>
+          <a href="/signup/">Get Started</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-heading">Legal</div>
+          <a href="#">Terms of Service</a>
+          <a href="#">Privacy Policy</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-heading">Support</div>
+          <a href="#">Contact</a>
+          <a href="#">FAQ</a>
+        </div>
+      </div>
+      <p class="footer-copy">© 2026 NySa FloW AI. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    function toggleCheck(id) {
+      document.getElementById(id).classList.toggle('checked');
+    }
+    // Password hint
+    document.getElementById('password').addEventListener('input', function() {
+      const hint = document.getElementById('pw-hint');
+      const len = this.value.length;
+      if (!len) { hint.textContent = ''; return; }
+      if (len < 8) { hint.textContent = `${8 - len} more character${8-len===1?'':'s'} needed`; hint.style.color = 'rgba(212,160,160,0.7)'; }
+      else { hint.textContent = 'Looks good'; hint.style.color = 'rgba(201,168,76,0.7)'; }
+    });
+  </script>
+</body>
+</html>
