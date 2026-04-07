@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NySa — Build Her World</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --gold: #C9A84C; --gold-dim: rgba(201,168,76,0.22); --bg: #0A0A0A; --text: #E8E0D0; --muted: rgba(232,224,208,0.45); }
+    html, body { min-height: 100vh; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-weight: 300; }
+    body { background-image: radial-gradient(ellipse 80% 50% at 50% -5%, rgba(201,168,76,0.06) 0%, transparent 65%); }
+
+    .back { position: fixed; top: 18px; left: 18px; font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); opacity: 0.55; text-decoration: none; z-index: 100; transition: opacity 0.3s; }
+    .back:hover { opacity: 1; }
+
+    .screen { max-width: 480px; margin: 0 auto; padding: 64px 28px 100px; }
+
+    .step-dots { display: flex; gap: 10px; margin-bottom: 40px; padding-top: 8px; }
+    .dot { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--muted); }
+    .dot.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.1); box-shadow: 0 0 10px rgba(201,168,76,0.2); }
+    .dot.done { border-color: rgba(201,168,76,0.4); color: rgba(201,168,76,0.6); }
+
+    h1 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 34px; line-height: 1.2; color: var(--text); margin-bottom: 8px; }
+    .subtitle { font-size: 13px; color: var(--muted); line-height: 1.65; margin-bottom: 28px; }
+
+    /* Section cards */
+    .section-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--gold-dim);
+      border-radius: 16px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+    }
+    .section-header {
+      padding: 18px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .section-header:hover { background: rgba(255,255,255,0.02); }
+    .section-title { font-size: 14px; font-weight: 400; color: var(--text); }
+    .section-chevron {
+      transition: transform 0.3s ease;
+      opacity: 0.35;
+    }
+    .section-card.open .section-chevron { transform: rotate(90deg); }
+    .section-body { padding: 0 20px 20px; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 16px; }
+    .section-card:not(.open) .section-body { display: none; }
+
+    /* Chips */
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      padding: 8px 16px; border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      font-size: 12px; color: var(--muted);
+      cursor: pointer; transition: all 0.25s;
+      white-space: nowrap;
+    }
+    .chip.selected {
+      border-color: rgba(201,168,76,0.45);
+      background: rgba(201,168,76,0.1);
+      color: var(--gold);
+    }
+    .chip:hover:not(.selected) { border-color: rgba(201,168,76,0.25); color: var(--text); }
+
+    .field-label { font-size: 11px; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 8px; margin-top: 14px; }
+    .field-label:first-child { margin-top: 0; }
+
+    /* Toggle row */
+    .toggle-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .toggle-row:last-child { border-bottom: none; }
+    .toggle-label { font-size: 13px; color: var(--text); }
+    .toggle {
+      width: 42px; height: 24px; border-radius: 12px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      position: relative; cursor: pointer; transition: background 0.3s;
+      flex-shrink: 0;
+    }
+    .toggle.on { background: rgba(201,168,76,0.6); border-color: rgba(201,168,76,0.4); }
+    .toggle::after {
+      content: ''; position: absolute; top: 3px; left: 3px;
+      width: 16px; height: 16px; border-radius: 50%; background: #fff;
+      transition: left 0.3s ease;
+    }
+    .toggle.on::after { left: 21px; }
+
+    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; padding: 16px 28px 32px; display: flex; justify-content: space-between; background: linear-gradient(to top, rgba(10,10,10,1) 60%, transparent); }
+    .back-btn { padding: 14px 24px; border: 1px solid var(--gold-dim); border-radius: 12px; background: transparent; font-family: 'Inter', sans-serif; font-size: 13px; color: var(--muted); cursor: pointer; transition: all 0.3s; }
+    .back-btn:hover { color: var(--text); border-color: rgba(201,168,76,0.4); }
+    .continue-btn { padding: 14px 32px; background: linear-gradient(135deg, rgba(201,168,76,0.85), rgba(201,168,76,0.6)); border: none; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; color: #0A0A0A; cursor: pointer; box-shadow: 0 0 20px rgba(201,168,76,0.2); transition: box-shadow 0.3s, transform 0.3s; }
+    .continue-btn:hover { box-shadow: 0 0 32px rgba(201,168,76,0.35); transform: translateY(-1px); }
+  </style>
+</head>
+<body>
+  <a href="/" class="back">← Gallery</a>
+  <div class="screen">
+    <div class="step-dots">
+      <div class="dot done">1</div>
+      <div class="dot done">2</div>
+      <div class="dot done">3</div>
+      <div class="dot done">4</div>
+      <div class="dot active">5</div>
+      <div class="dot">6</div>
+      <div class="dot">7</div>
+    </div>
+
+    <h1>Build Her World</h1>
+    <p class="subtitle">Give her context — where she lives, how she sees herself, and where the limits are. This shapes the texture of every conversation.</p>
+
+    <!-- Identity -->
+    <div class="section-card open" id="s1">
+      <div class="section-header" onclick="toggle('s1')">
+        <span class="section-title">Identity</span>
+        <svg class="section-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(201,168,76,0.6)" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+      <div class="section-body">
+        <div class="field-label">Age range</div>
+        <div class="chips">
+          <div class="chip" onclick="pick(this,'age')">Early 20s</div>
+          <div class="chip selected" onclick="pick(this,'age')">Mid 20s</div>
+          <div class="chip" onclick="pick(this,'age')">Late 20s</div>
+          <div class="chip" onclick="pick(this,'age')">30s</div>
+          <div class="chip" onclick="pick(this,'age')">Timeless</div>
+        </div>
+        <div class="field-label">Vibe</div>
+        <div class="chips">
+          <div class="chip selected" onclick="toggle_chip(this)">Artistic</div>
+          <div class="chip" onclick="toggle_chip(this)">Intellectual</div>
+          <div class="chip" onclick="toggle_chip(this)">Adventurous</div>
+          <div class="chip" onclick="toggle_chip(this)">Domestic</div>
+          <div class="chip" onclick="toggle_chip(this)">Career-driven</div>
+          <div class="chip" onclick="toggle_chip(this)">Free-spirited</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Relationship Energy -->
+    <div class="section-card" id="s2">
+      <div class="section-header" onclick="toggle('s2')">
+        <span class="section-title">Relationship Energy</span>
+        <svg class="section-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(201,168,76,0.6)" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+      <div class="section-body">
+        <div class="field-label">Dynamic</div>
+        <div class="chips">
+          <div class="chip selected" onclick="pick(this,'dynamic')">Romantic partner</div>
+          <div class="chip" onclick="pick(this,'dynamic')">Best friend</div>
+          <div class="chip" onclick="pick(this,'dynamic')">Mentor figure</div>
+          <div class="chip" onclick="pick(this,'dynamic')">Something undefined</div>
+        </div>
+        <div class="field-label">Attachment style</div>
+        <div class="chips">
+          <div class="chip" onclick="pick(this,'attach')">Secure</div>
+          <div class="chip selected" onclick="pick(this,'attach')">Softly anxious</div>
+          <div class="chip" onclick="pick(this,'attach')">Avoidant</div>
+          <div class="chip" onclick="pick(this,'attach')">Fearfully drawn</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- World & Setting -->
+    <div class="section-card" id="s3">
+      <div class="section-header" onclick="toggle('s3')">
+        <span class="section-title">World &amp; Setting</span>
+        <svg class="section-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(201,168,76,0.6)" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+      <div class="section-body">
+        <div class="field-label">Where she lives</div>
+        <div class="chips">
+          <div class="chip" onclick="pick(this,'loc')">City apartment</div>
+          <div class="chip selected" onclick="pick(this,'loc')">Coastal town</div>
+          <div class="chip" onclick="pick(this,'loc')">Countryside</div>
+          <div class="chip" onclick="pick(this,'loc')">Anywhere with you</div>
+        </div>
+        <div class="field-label">What she does</div>
+        <div class="chips">
+          <div class="chip" onclick="toggle_chip(this)">Artist</div>
+          <div class="chip selected" onclick="toggle_chip(this)">Writer</div>
+          <div class="chip" onclick="toggle_chip(this)">Therapist</div>
+          <div class="chip" onclick="toggle_chip(this)">Chef</div>
+          <div class="chip" onclick="toggle_chip(this)">Wanderer</div>
+          <div class="chip" onclick="toggle_chip(this)">Undefined</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Boundaries -->
+    <div class="section-card" id="s4">
+      <div class="section-header" onclick="toggle('s4')">
+        <span class="section-title">Boundaries</span>
+        <svg class="section-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(201,168,76,0.6)" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+      <div class="section-body">
+        <div class="toggle-row">
+          <span class="toggle-label">Intimate content</span>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">Dark emotional themes</span>
+          <div class="toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">Real-world roleplay scenarios</span>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">She can set her own limits</span>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="back-btn">Back</button>
+    <button class="continue-btn">Continue</button>
+  </div>
+
+  <script>
+    function toggle(id) {
+      const card = document.getElementById(id);
+      card.classList.toggle('open');
+    }
+    function pick(el, group) {
+      el.closest('.chips').querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+    function toggle_chip(el) {
+      el.classList.toggle('selected');
+    }
+  </script>
+</body>
+</html>

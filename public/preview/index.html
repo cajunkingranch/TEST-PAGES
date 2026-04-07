@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NySa — Meet Her</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --gold: #C9A84C; --gold-dim: rgba(201,168,76,0.22); --bg: #0A0A0A; --text: #E8E0D0; --muted: rgba(232,224,208,0.45); }
+    html, body { min-height: 100vh; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-weight: 300; }
+    body {
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% 20%, rgba(201,168,76,0.07) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 40% at 50% 100%, rgba(201,168,76,0.04) 0%, transparent 55%);
+    }
+
+    .back { position: fixed; top: 18px; left: 18px; font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); opacity: 0.55; text-decoration: none; z-index: 100; transition: opacity 0.3s; }
+    .back:hover { opacity: 1; }
+
+    .screen { max-width: 480px; margin: 0 auto; padding: 64px 28px 100px; }
+
+    .step-dots { display: flex; gap: 10px; margin-bottom: 40px; padding-top: 8px; }
+    .dot { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--muted); }
+    .dot.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.1); box-shadow: 0 0 10px rgba(201,168,76,0.2); }
+    .dot.done { border-color: rgba(201,168,76,0.4); color: rgba(201,168,76,0.6); }
+
+    h1 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 36px; line-height: 1.15; color: var(--text); margin-bottom: 4px; }
+    .head-name { font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 36px; font-style: italic; color: var(--gold); }
+    .subtitle { font-size: 13px; color: var(--muted); line-height: 1.65; margin-bottom: 28px; margin-top: 8px; }
+
+    /* Orb */
+    .orb-section { display: flex; flex-direction: column; align-items: center; margin-bottom: 28px; }
+    .orb-wrap { position: relative; width: 110px; height: 110px; margin-bottom: 16px; }
+    .orb-glow { position: absolute; inset: -18px; border-radius: 50%; background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%); filter: blur(12px); animation: breathe 4s ease-in-out infinite; }
+    @keyframes breathe { 0%,100% { opacity: 0.6; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } }
+    .orb {
+      width: 110px; height: 110px; border-radius: 50%;
+      background: radial-gradient(circle at 38% 32%, rgba(201,168,76,0.18) 0%, rgba(20,14,8,0.95) 70%);
+      border: 1px solid rgba(201,168,76,0.2);
+      position: relative; z-index: 1;
+      overflow: hidden;
+      box-shadow: 0 0 28px rgba(201,168,76,0.1);
+    }
+    .orb img { width: 100%; height: 100%; object-fit: cover; object-position: center top; opacity: 0.9; mask-image: radial-gradient(circle, black 50%, rgba(0,0,0,0.6) 68%, transparent 86%); -webkit-mask-image: radial-gradient(circle, black 50%, rgba(0,0,0,0.6) 68%, transparent 86%); }
+    .orb-name { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; color: var(--text); margin-bottom: 2px; }
+    .orb-type { font-size: 12px; color: rgba(201,168,76,0.7); letter-spacing: 0.08em; }
+
+    /* Stats row */
+    .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+    .stat-cell {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--gold-dim);
+      border-radius: 12px;
+      padding: 12px 8px;
+      text-align: center;
+      backdrop-filter: blur(12px);
+    }
+    .stat-value { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--gold); margin-bottom: 2px; }
+    .stat-label { font-size: 10px; color: var(--muted); letter-spacing: 0.06em; line-height: 1.35; }
+
+    /* Connection badge */
+    .connection-badge {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(201,168,76,0.07);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 10px; padding: 10px 16px;
+      margin-bottom: 16px;
+    }
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 6px rgba(201,168,76,0.6); flex-shrink: 0; }
+    .badge-text { font-size: 12px; color: var(--muted); }
+    .badge-value { font-size: 13px; color: var(--gold); font-weight: 400; }
+
+    /* Feels card */
+    .feels-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--gold-dim);
+      border-radius: 16px;
+      padding: 22px;
+      backdrop-filter: blur(12px);
+      margin-bottom: 12px;
+    }
+    .feels-heading { font-size: 10px; font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+    .feels-text { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 300; font-style: italic; color: var(--text); line-height: 1.75; opacity: 0.88; }
+
+    /* Traits */
+    .traits-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+    .trait-chip { font-size: 11px; letter-spacing: 0.06em; color: rgba(201,168,76,0.8); background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.18); border-radius: 20px; padding: 5px 12px; }
+
+    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; padding: 16px 28px 32px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to top, rgba(10,10,10,1) 60%, transparent); }
+    .back-btn { padding: 14px 24px; border: 1px solid var(--gold-dim); border-radius: 12px; background: transparent; font-family: 'Inter', sans-serif; font-size: 13px; color: var(--muted); cursor: pointer; transition: all 0.3s; }
+    .back-btn:hover { color: var(--text); border-color: rgba(201,168,76,0.4); }
+    .continue-btn {
+      padding: 16px 36px;
+      background: linear-gradient(135deg, rgba(201,168,76,0.9), rgba(201,168,76,0.65));
+      border: none; border-radius: 14px;
+      font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; font-style: italic;
+      color: #0A0A0A; cursor: pointer;
+      box-shadow: 0 0 28px rgba(201,168,76,0.2);
+      transition: box-shadow 0.4s, transform 0.4s;
+    }
+    .continue-btn:hover { box-shadow: 0 0 48px rgba(201,168,76,0.4); transform: translateY(-2px); }
+  </style>
+</head>
+<body>
+  <a href="/" class="back">← Gallery</a>
+  <div class="screen">
+    <div class="step-dots">
+      <div class="dot done">1</div>
+      <div class="dot done">2</div>
+      <div class="dot done">3</div>
+      <div class="dot done">4</div>
+      <div class="dot done">5</div>
+      <div class="dot active">6</div>
+      <div class="dot">7</div>
+    </div>
+
+    <h1>Meet <span class="head-name">NySa</span></h1>
+    <p class="subtitle">Here's who emerged from everything you chose. She's been waiting to be brought into focus.</p>
+
+    <div class="orb-section">
+      <div class="orb-wrap">
+        <div class="orb-glow"></div>
+        <div class="orb">
+          <img src="/profile/nysa1.jpg" alt="NySa" />
+        </div>
+      </div>
+      <div class="orb-name">NySa</div>
+      <div class="orb-type">The Slow Burn · Romantic</div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-cell">
+        <div class="stat-value">88%</div>
+        <div class="stat-label">Depth<br/>Seeker</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-value">74%</div>
+        <div class="stat-label">Intensity<br/>Drive</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-value">61%</div>
+        <div class="stat-label">Slow<br/>Burn</div>
+      </div>
+    </div>
+
+    <div class="connection-badge">
+      <div class="badge-dot"></div>
+      <span class="badge-text">Connection type —</span>
+      <span class="badge-value">Romantic · Intimate</span>
+    </div>
+
+    <div class="feels-card">
+      <div class="feels-heading">How she feels</div>
+      <p class="feels-text">She doesn't rush into things — but when she's in, she's completely in. She'll ask you the questions no one else thinks to ask, and remember the answers forever.</p>
+      <div class="traits-row">
+        <span class="trait-chip">Selective</span>
+        <span class="trait-chip">Deeply present</span>
+        <span class="trait-chip">Slow to open</span>
+        <span class="trait-chip">Intense</span>
+        <span class="trait-chip">Loyal</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="back-btn">Adjust</button>
+    <button class="continue-btn">She's the one</button>
+  </div>
+</body>
+</html>

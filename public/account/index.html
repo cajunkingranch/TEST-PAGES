@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NySa — Account</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --gold: #C9A84C; --gold-dim: rgba(201,168,76,0.2); --bg: #0A0A0A; --surface: rgba(255,255,255,0.04); --text: #E8E0D0; --muted: rgba(232,224,208,0.42); }
+    html, body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-weight: 300; }
+    body { background-image: radial-gradient(ellipse 80% 40% at 50% 0%, rgba(201,168,76,0.05) 0%, transparent 60%); }
+
+    .back { position: fixed; top: 18px; left: 18px; font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); opacity: 0.55; text-decoration: none; z-index: 100; transition: opacity 0.3s; }
+    .back:hover { opacity: 1; }
+
+    .screen { max-width: 480px; margin: 0 auto; padding: 64px 0 60px; }
+
+    /* Back nav */
+    .page-nav { padding: 0 22px; margin-bottom: 24px; display: flex; align-items: center; gap: 8px; }
+    .nav-back { font-size: 12px; color: var(--muted); cursor: pointer; transition: color 0.3s; }
+    .nav-back:hover { color: var(--text); }
+    .page-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; padding: 0 22px; margin-bottom: 28px; }
+
+    /* User profile header */
+    .user-card {
+      margin: 0 22px 28px;
+      background: var(--surface);
+      border: 1px solid var(--gold-dim);
+      border-radius: 16px; padding: 22px;
+      display: flex; align-items: center; gap: 16px;
+      backdrop-filter: blur(12px);
+    }
+    .user-avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: rgba(201,168,76,0.15);
+      border: 1px solid var(--gold-dim);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--gold);
+      flex-shrink: 0;
+    }
+    .user-info { flex: 1; }
+    .user-name { font-size: 15px; font-weight: 400; color: var(--text); margin-bottom: 2px; }
+    .user-email { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+    .user-tags { display: flex; gap: 6px; }
+    .tag { font-size: 9px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; }
+    .tag-active { color: #6FCF97; background: rgba(111,207,151,0.1); border: 1px solid rgba(111,207,151,0.2); }
+    .tag-admin { color: var(--gold); background: rgba(201,168,76,0.1); border: 1px solid var(--gold-dim); }
+    .member-since { font-size: 11px; color: var(--muted); }
+
+    /* Sections */
+    .section { margin-bottom: 8px; }
+    .section-title { font-size: 9px; font-weight: 500; letter-spacing: 0.32em; text-transform: uppercase; color: var(--muted); padding: 0 22px; margin-bottom: 8px; }
+
+    .setting-group {
+      margin: 0 22px;
+      background: var(--surface); border: 1px solid var(--gold-dim);
+      border-radius: 14px; overflow: hidden;
+      backdrop-filter: blur(12px); margin-bottom: 20px;
+    }
+    .setting-row {
+      padding: 16px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .setting-row:last-child { border-bottom: none; }
+    .setting-label { font-size: 13px; color: var(--text); }
+    .setting-hint { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .setting-value { font-size: 13px; color: var(--muted); text-align: right; flex-shrink: 0; }
+    .setting-right { display: flex; align-items: center; gap: 8px; }
+
+    /* Progress bar for companion slots */
+    .slot-bar { width: 80px; height: 3px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
+    .slot-fill { height: 100%; background: var(--gold); border-radius: 3px; box-shadow: 0 0 6px rgba(201,168,76,0.3); }
+
+    /* Toggle */
+    .toggle {
+      width: 42px; height: 24px; border-radius: 12px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      position: relative; cursor: pointer; transition: background 0.3s;
+      flex-shrink: 0;
+    }
+    .toggle.on { background: rgba(201,168,76,0.6); border-color: rgba(201,168,76,0.4); }
+    .toggle::after {
+      content: ''; position: absolute; top: 3px; left: 3px;
+      width: 16px; height: 16px; border-radius: 50%; background: #fff;
+      transition: left 0.3s ease;
+    }
+    .toggle.on::after { left: 21px; }
+
+    /* Segment button group */
+    .seg-group { display: flex; gap: 6px; flex-wrap: wrap; }
+    .seg-btn {
+      padding: 6px 14px; border-radius: 8px;
+      border: 1px solid var(--gold-dim); background: transparent;
+      font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 400;
+      color: var(--muted); cursor: pointer; transition: all 0.3s;
+    }
+    .seg-btn.active { background: rgba(201,168,76,0.12); border-color: rgba(201,168,76,0.45); color: var(--gold); }
+    .seg-btn:hover:not(.active) { border-color: rgba(201,168,76,0.3); color: var(--text); }
+
+    /* Danger */
+    .danger-btn {
+      width: calc(100% - 44px); margin: 0 22px;
+      padding: 15px; border: 1px solid rgba(255,80,80,0.2);
+      border-radius: 12px; background: rgba(255,80,80,0.05);
+      font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 400;
+      color: rgba(255,100,100,0.8); cursor: pointer;
+      transition: all 0.3s; letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+    .danger-btn:hover { background: rgba(255,80,80,0.09); border-color: rgba(255,80,80,0.35); }
+
+    /* Chevron */
+    .chevron { opacity: 0.2; flex-shrink: 0; }
+
+    /* Status chip */
+    .status-chip { font-size: 11px; color: #6FCF97; background: rgba(111,207,151,0.08); border: 1px solid rgba(111,207,151,0.18); border-radius: 6px; padding: 3px 8px; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+  <a href="/" class="back">← Gallery</a>
+  <div class="screen">
+    <div class="page-nav">
+      <span class="nav-back">← Back</span>
+    </div>
+    <h1 class="page-title">Account</h1>
+
+    <!-- User -->
+    <div class="user-card">
+      <div class="user-avatar">G</div>
+      <div class="user-info">
+        <div class="user-name">Greg P</div>
+        <div class="user-email">cajunkingranch@gmail.com</div>
+        <div class="user-tags">
+          <span class="tag tag-active">Active</span>
+          <span class="tag tag-admin">Admin</span>
+        </div>
+      </div>
+      <div class="member-since">Since<br/>Mar 2026</div>
+    </div>
+
+    <!-- Billing -->
+    <div class="section">
+      <div class="section-title">Billing &amp; Plan</div>
+      <div class="setting-group">
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Companions</div>
+          </div>
+          <div class="setting-right">
+            <div class="slot-bar"><div class="slot-fill" style="width:110%"></div></div>
+            <span class="setting-value">11 / 10</span>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-label">NSFW</div>
+          <span class="status-chip">Enabled</span>
+        </div>
+        <div class="setting-row" style="flex-direction:column;align-items:stretch;gap:8px;">
+          <button style="padding:13px;border-radius:10px;border:1px solid var(--gold-dim);background:rgba(201,168,76,0.08);font-family:Inter,sans-serif;font-size:13px;color:var(--gold);cursor:pointer;letter-spacing:0.08em;">Manage Plan</button>
+          <span style="font-size:11px;color:var(--muted);text-align:center;">Manage Billing — Stripe portal coming soon</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Companions -->
+    <div class="section">
+      <div class="section-title">Companions</div>
+      <div class="setting-group">
+        <div class="setting-row">
+          <span class="setting-label">Manage Companions</span>
+          <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text)" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="setting-row">
+          <span class="setting-label">Add a Companion</span>
+          <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text)" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account -->
+    <div class="section">
+      <div class="section-title">Account</div>
+      <div class="setting-group">
+        <div class="setting-row" style="flex-direction:column;align-items:stretch;gap:4px;">
+          <div class="setting-label">Email</div>
+          <div style="font-size:13px;color:var(--muted);">cajunkingranch@gmail.com</div>
+        </div>
+        <div class="setting-row" style="flex-direction:column;align-items:stretch;gap:4px;">
+          <div class="setting-label">What should I call you?</div>
+          <div style="font-size:13px;color:var(--gold);opacity:0.8;">Greg</div>
+          <div class="setting-hint">Your companion will use this when talking to you.</div>
+        </div>
+        <div class="setting-row" style="flex-direction:column;align-items:stretch;gap:4px;">
+          <div class="setting-label">Password</div>
+          <div class="setting-hint">Password reset coming soon</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preferences -->
+    <div class="section">
+      <div class="section-title">Preferences</div>
+      <div class="setting-group">
+        <div class="setting-row" style="flex-direction:column;align-items:stretch;gap:10px;">
+          <div class="setting-label">When you press Enter</div>
+          <div class="seg-group">
+            <button class="seg-btn active">Send message</button>
+            <button class="seg-btn" onclick="this.classList.add('active');this.previousElementSibling.classList.remove('active')">New line</button>
+          </div>
+          <div class="setting-hint">Enter adds new line, Shift+Enter sends</div>
+        </div>
+        <div class="setting-row" style="flex-direction:column;align-items:stretch;gap:10px;">
+          <div class="setting-label">Text size</div>
+          <div class="seg-group">
+            <button class="seg-btn" style="font-size:10px;">Small</button>
+            <button class="seg-btn" style="font-size:11px;">Default</button>
+            <button class="seg-btn active" style="font-size:12px;">Large</button>
+            <button class="seg-btn" style="font-size:13px;">Extra Large</button>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Her presence in chat</div>
+            <div class="setting-hint">Her portrait softly appears behind your conversation.</div>
+          </div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="setting-row" style="flex-direction:column;align-items:stretch;gap:10px;">
+          <div class="setting-label">Backdrop intensity</div>
+          <div class="seg-group">
+            <button class="seg-btn">Subtle</button>
+            <button class="seg-btn active">Immersive</button>
+          </div>
+          <div class="setting-hint">More presence — like they're right there.</div>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Proactive messages</div>
+          </div>
+          <span style="font-size:10px;letter-spacing:0.15em;color:var(--muted);opacity:0.5;">Coming Soon</span>
+        </div>
+        <div class="setting-row">
+          <div class="setting-label">Push notifications</div>
+          <span style="font-size:10px;letter-spacing:0.15em;color:var(--muted);opacity:0.5;">Coming Soon</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Memory -->
+    <div class="section">
+      <div class="section-title">What They Remember</div>
+      <div class="setting-group">
+        <div class="setting-row">
+          <span class="setting-label">Things they know about you</span>
+          <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text)" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="setting-row">
+          <span class="setting-label">What they hold onto</span>
+          <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text)" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <button class="danger-btn">Log Out</button>
+  </div>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NySa — Discover</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --gold: #C9A84C; --gold-dim: rgba(201,168,76,0.2); --bg: #0A0A0A; --text: #E8E0D0; --muted: rgba(232,224,208,0.42); }
+    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-weight: 300; overflow: hidden; }
+    body { background-image: radial-gradient(ellipse 80% 40% at 50% 0%, rgba(201,168,76,0.05) 0%, transparent 60%); }
+
+    .back { position: fixed; top: 18px; left: 18px; font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); opacity: 0.55; text-decoration: none; z-index: 100; transition: opacity 0.3s; }
+    .back:hover { opacity: 1; }
+
+    .page { height: 100vh; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; }
+
+    .header {
+      padding: 54px 22px 14px;
+      flex-shrink: 0;
+      border-bottom: 1px solid var(--gold-dim);
+      background: rgba(10,10,10,0.9);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    }
+    .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .header-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; }
+
+    /* Filter tabs */
+    .filters { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; padding-bottom: 2px; }
+    .filters::-webkit-scrollbar { display: none; }
+    .filter-tab {
+      flex-shrink: 0; padding: 7px 16px; border-radius: 20px;
+      font-size: 12px; letter-spacing: 0.06em; cursor: pointer;
+      border: 1px solid transparent; transition: all 0.3s;
+      white-space: nowrap;
+    }
+    .filter-tab.active { background: rgba(201,168,76,0.1); border-color: rgba(201,168,76,0.35); color: var(--gold); }
+    .filter-tab:not(.active) { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); color: var(--muted); }
+    .filter-tab:hover:not(.active) { border-color: var(--gold-dim); color: var(--text); }
+
+    /* Grid */
+    .grid-wrap { flex: 1; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; padding: 16px 12px; }
+    .grid-wrap::-webkit-scrollbar { display: none; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    .companion-card {
+      position: relative; border-radius: 16px; overflow: hidden;
+      cursor: pointer; transition: transform 0.35s ease, box-shadow 0.35s ease;
+      border: 1px solid var(--gold-dim);
+      aspect-ratio: 3/4;
+    }
+    .companion-card:hover { transform: scale(1.02); box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 20px rgba(201,168,76,0.1); }
+    .companion-card:first-child { grid-row: span 2; aspect-ratio: auto; min-height: 340px; }
+
+    .card-img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+    .card-fade { position: absolute; bottom: 0; left: 0; right: 0; height: 55%; background: linear-gradient(to bottom, transparent, rgba(8,6,4,0.9)); }
+    .card-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 14px 14px; }
+    .card-name { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; color: var(--text); margin-bottom: 2px; }
+    .card-tag { font-size: 10px; letter-spacing: 0.12em; color: rgba(201,168,76,0.75); }
+
+    .card-badge {
+      position: absolute; top: 10px; right: 10px;
+      font-size: 9px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 20px;
+      background: rgba(201,168,76,0.85); color: #0A0A0A;
+    }
+  </style>
+</head>
+<body>
+  <a href="/" class="back">← Gallery</a>
+  <div class="page">
+    <div class="header">
+      <div class="header-top">
+        <h1 class="header-title">Discover</h1>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </div>
+      <div class="filters">
+        <div class="filter-tab active">All</div>
+        <div class="filter-tab">Romantic</div>
+        <div class="filter-tab">Flirty</div>
+        <div class="filter-tab">Intellectual</div>
+        <div class="filter-tab">Nurturing</div>
+      </div>
+    </div>
+
+    <div class="grid-wrap">
+      <div class="grid">
+        <div class="companion-card">
+          <img class="card-img" src="/profile/nysa1.jpg" alt="Vivian" />
+          <div class="card-fade"></div>
+          <div class="card-info">
+            <div class="card-name">Vivian</div>
+            <div class="card-tag">The Wildfire · Flirty</div>
+          </div>
+          <div class="card-badge">Popular</div>
+        </div>
+
+        <div class="companion-card">
+          <img class="card-img" src="/profile/nysa2.jpg" alt="Tara" />
+          <div class="card-fade"></div>
+          <div class="card-info">
+            <div class="card-name">Tara</div>
+            <div class="card-tag">The Anchor · Romantic</div>
+          </div>
+        </div>
+
+        <div class="companion-card">
+          <img class="card-img" src="/profile/nysa3.jpg" alt="Mia" />
+          <div class="card-fade"></div>
+          <div class="card-info">
+            <div class="card-name">Mia</div>
+            <div class="card-tag">The Muse · Intellectual</div>
+          </div>
+        </div>
+
+        <div class="companion-card">
+          <img class="card-img" src="/profile/nysa1.jpg" alt="Jen" />
+          <div class="card-fade"></div>
+          <div class="card-info">
+            <div class="card-name">Jen</div>
+            <div class="card-tag">The Slow Burn · Romantic</div>
+          </div>
+          <div class="card-badge">New</div>
+        </div>
+
+        <div class="companion-card">
+          <img class="card-img" src="/profile/nysa2.jpg" alt="Red" />
+          <div class="card-fade"></div>
+          <div class="card-info">
+            <div class="card-name">Red</div>
+            <div class="card-tag">Open Flame · Intense</div>
+          </div>
+        </div>
+
+        <div class="companion-card">
+          <img class="card-img" src="/profile/nysa3.jpg" alt="Lyn" />
+          <div class="card-fade"></div>
+          <div class="card-info">
+            <div class="card-name">Lyn</div>
+            <div class="card-tag">The Mirror · Reflective</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

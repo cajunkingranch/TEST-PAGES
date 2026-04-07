@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NySa — Create Your Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --gold: #C9A84C; --gold-dim: rgba(201,168,76,0.22); --bg: #0A0A0A; --text: #E8E0D0; --muted: rgba(232,224,208,0.45); }
+    html, body { min-height: 100vh; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-weight: 300; }
+    body { background-image: radial-gradient(ellipse 80% 50% at 50% -5%, rgba(201,168,76,0.07) 0%, transparent 65%); }
+
+    .back { position: fixed; top: 18px; left: 18px; font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); opacity: 0.55; text-decoration: none; z-index: 100; transition: opacity 0.3s; }
+    .back:hover { opacity: 1; }
+
+    .screen { min-height: 100vh; max-width: 480px; margin: 0 auto; padding: 80px 28px 56px; display: flex; flex-direction: column; }
+
+    .logo-row { display: flex; align-items: center; gap: 10px; margin-bottom: 48px; }
+    .logo-img { width: 28px; height: 28px; object-fit: contain; opacity: 0.8; }
+    .logo-name { font-family: 'Cormorant Garamond', serif; font-size: 14px; letter-spacing: 0.2em; color: var(--gold); opacity: 0.7; }
+
+    h1 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 38px; line-height: 1.15; color: var(--text); margin-bottom: 10px; }
+    .subtitle { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 44px; }
+
+    .step-block { margin-bottom: 36px; }
+    .step-title { font-size: 11px; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+
+    .toggle-row { display: flex; gap: 10px; margin-bottom: 0; }
+    .toggle-btn {
+      flex: 1; padding: 14px;
+      border-radius: 12px; border: 1px solid var(--gold-dim);
+      background: rgba(255,255,255,0.04);
+      font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 400;
+      color: var(--muted); cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(12px);
+    }
+    .toggle-btn.active {
+      background: rgba(201,168,76,0.1);
+      border-color: rgba(201,168,76,0.45);
+      color: var(--gold);
+      box-shadow: 0 0 16px rgba(201,168,76,0.08);
+    }
+    .toggle-btn:hover:not(.active) { border-color: rgba(201,168,76,0.3); color: var(--text); }
+
+    .path-cards { display: flex; flex-direction: column; gap: 12px; }
+    .path-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--gold-dim);
+      border-radius: 14px;
+      padding: 22px 20px;
+      cursor: pointer;
+      transition: all 0.35s ease;
+      backdrop-filter: blur(12px);
+    }
+    .path-card:hover { border-color: rgba(201,168,76,0.45); background: rgba(201,168,76,0.05); transform: translateX(3px); }
+    .path-card-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; color: var(--text); margin-bottom: 6px; }
+    .path-card-desc { font-size: 13px; color: var(--muted); line-height: 1.55; margin-bottom: 14px; }
+    .path-btn {
+      display: inline-block; padding: 9px 20px;
+      background: linear-gradient(135deg, rgba(201,168,76,0.8), rgba(201,168,76,0.55));
+      border: none; border-radius: 20px;
+      font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500;
+      color: #0A0A0A; letter-spacing: 0.08em; cursor: pointer;
+      box-shadow: 0 0 14px rgba(201,168,76,0.2);
+      transition: box-shadow 0.3s ease;
+    }
+    .path-btn:hover { box-shadow: 0 0 24px rgba(201,168,76,0.35); }
+  </style>
+</head>
+<body>
+  <a href="/" class="back">← Gallery</a>
+  <div class="screen">
+    <div class="logo-row">
+      <img src="/Logos/nysa-logo.svg.png" class="logo-img" alt="NySa" />
+      <span class="logo-name">NySa FloW AI</span>
+    </div>
+
+    <h1>Create your companion</h1>
+    <p class="subtitle">Two quick steps before we continue.</p>
+
+    <div class="step-block">
+      <div class="step-title">Step 1 — Choose companion type</div>
+      <div class="toggle-row">
+        <button class="toggle-btn active" onclick="this.classList.add('active');this.nextElementSibling.classList.remove('active')">Build a Woman</button>
+        <button class="toggle-btn" onclick="this.classList.add('active');this.previousElementSibling.classList.remove('active')">Build a Man</button>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-title">Step 2 — Pick your starting path</div>
+      <div class="path-cards">
+        <div class="path-card">
+          <div class="path-card-title">Discover Your Type</div>
+          <p class="path-card-desc">Answer a few questions and we'll find your perfect match.</p>
+          <button class="path-btn">Start Discovery</button>
+        </div>
+        <div class="path-card">
+          <div class="path-card-title">Choose a Personality</div>
+          <p class="path-card-desc">Browse and pick from our collection.</p>
+          <button class="path-btn">Browse Companions</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

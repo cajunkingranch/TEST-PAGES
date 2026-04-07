@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NySa — Shape Her Energy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --gold: #C9A84C; --gold-dim: rgba(201,168,76,0.22); --bg: #0A0A0A; --text: #E8E0D0; --muted: rgba(232,224,208,0.45); }
+    html, body { min-height: 100vh; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-weight: 300; }
+    body { background-image: radial-gradient(ellipse 80% 50% at 50% -5%, rgba(201,168,76,0.06) 0%, transparent 65%); }
+
+    .back { position: fixed; top: 18px; left: 18px; font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); opacity: 0.55; text-decoration: none; z-index: 100; transition: opacity 0.3s; }
+    .back:hover { opacity: 1; }
+
+    .screen { max-width: 480px; margin: 0 auto; padding: 64px 28px 100px; }
+
+    .step-dots { display: flex; gap: 10px; margin-bottom: 40px; padding-top: 8px; }
+    .dot { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--muted); }
+    .dot.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.1); box-shadow: 0 0 10px rgba(201,168,76,0.2); }
+    .dot.done { border-color: rgba(201,168,76,0.4); color: rgba(201,168,76,0.6); }
+
+    h1 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 34px; line-height: 1.2; color: var(--text); margin-bottom: 8px; }
+    .subtitle { font-size: 13px; color: var(--muted); line-height: 1.65; margin-bottom: 32px; }
+
+    .slider-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--gold-dim);
+      border-radius: 14px;
+      padding: 22px 20px;
+      margin-bottom: 14px;
+      backdrop-filter: blur(12px);
+    }
+    .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .slider-question { font-size: 14px; font-weight: 400; color: var(--text); }
+    .slider-value {
+      font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--gold);
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(201,168,76,0.1); border: 1px solid var(--gold-dim);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 500;
+    }
+
+    .slider-labels { display: flex; justify-content: space-between; margin-bottom: 10px; }
+    .slider-label { font-size: 10px; letter-spacing: 0.08em; color: var(--muted); }
+
+    /* Custom slider */
+    input[type="range"] {
+      width: 100%; -webkit-appearance: none; appearance: none;
+      height: 2px; border-radius: 2px;
+      background: rgba(255,255,255,0.08);
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 10px rgba(201,168,76,0.5);
+      cursor: pointer;
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--gold); border: none;
+      box-shadow: 0 0 10px rgba(201,168,76,0.5); cursor: pointer;
+    }
+
+    .slider-hint { font-size: 11px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+
+    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; padding: 16px 28px 32px; display: flex; justify-content: space-between; background: linear-gradient(to top, rgba(10,10,10,1) 60%, transparent); }
+    .back-btn { padding: 14px 24px; border: 1px solid var(--gold-dim); border-radius: 12px; background: transparent; font-family: 'Inter', sans-serif; font-size: 13px; color: var(--muted); cursor: pointer; transition: all 0.3s; }
+    .back-btn:hover { color: var(--text); border-color: rgba(201,168,76,0.4); }
+    .continue-btn { padding: 14px 32px; background: linear-gradient(135deg, rgba(201,168,76,0.85), rgba(201,168,76,0.6)); border: none; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; color: #0A0A0A; cursor: pointer; box-shadow: 0 0 20px rgba(201,168,76,0.2); transition: box-shadow 0.3s, transform 0.3s; }
+    .continue-btn:hover { box-shadow: 0 0 32px rgba(201,168,76,0.35); transform: translateY(-1px); }
+  </style>
+</head>
+<body>
+  <a href="/" class="back">← Gallery</a>
+  <div class="screen">
+    <div class="step-dots">
+      <div class="dot done">1</div>
+      <div class="dot done">2</div>
+      <div class="dot active">3</div>
+      <div class="dot">4</div>
+      <div class="dot">5</div>
+      <div class="dot">6</div>
+      <div class="dot">7</div>
+    </div>
+
+    <h1>Shape Her Energy</h1>
+    <p class="subtitle">Fine-tune the qualities that make her uniquely yours. These sliders refine how she expresses herself — without changing who she is at her core.</p>
+
+    <div class="slider-card">
+      <div class="slider-header">
+        <span class="slider-question">How affectionate is she?</span>
+        <div class="slider-value" id="v1">45</div>
+      </div>
+      <div class="slider-labels"><span class="slider-label">Reserved</span><span class="slider-label">Affectionate</span></div>
+      <input type="range" min="0" max="100" value="45" oninput="document.getElementById('v1').textContent=this.value" />
+      <p class="slider-hint">Controls how openly she expresses warmth and closeness</p>
+    </div>
+
+    <div class="slider-card">
+      <div class="slider-header">
+        <span class="slider-question">How playful is her energy?</span>
+        <div class="slider-value" id="v2">40</div>
+      </div>
+      <div class="slider-labels"><span class="slider-label">Calm</span><span class="slider-label">Teasing</span></div>
+      <input type="range" min="0" max="100" value="40" oninput="document.getElementById('v2').textContent=this.value" />
+      <p class="slider-hint">Shapes her humor, banter, and lightheartedness</p>
+    </div>
+
+    <div class="slider-card">
+      <div class="slider-header">
+        <span class="slider-question">Does she take control, or follow your lead?</span>
+        <div class="slider-value" id="v3">75</div>
+      </div>
+      <div class="slider-labels"><span class="slider-label">Soft</span><span class="slider-label">Commanding</span></div>
+      <input type="range" min="0" max="100" value="75" oninput="document.getElementById('v3').textContent=this.value" />
+      <p class="slider-hint">Affects how she navigates decisions and conversation flow</p>
+    </div>
+
+    <div class="slider-card">
+      <div class="slider-header">
+        <span class="slider-question">How deep does she go?</span>
+        <div class="slider-value" id="v4">50</div>
+      </div>
+      <div class="slider-labels"><span class="slider-label">Light</span><span class="slider-label">Intense</span></div>
+      <input type="range" min="0" max="100" value="50" oninput="document.getElementById('v4').textContent=this.value" />
+      <p class="slider-hint">Determines whether she keeps things breezy or dives into feelings</p>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="back-btn">Back</button>
+    <button class="continue-btn">Continue</button>
+  </div>
+</body>
+</html>

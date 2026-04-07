@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NySa — Design Her Look</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --gold: #C9A84C; --gold-dim: rgba(201,168,76,0.22); --bg: #0A0A0A; --text: #E8E0D0; --muted: rgba(232,224,208,0.45); }
+    html, body { min-height: 100vh; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-weight: 300; }
+    body { background-image: radial-gradient(ellipse 80% 50% at 50% -5%, rgba(201,168,76,0.06) 0%, transparent 65%); }
+
+    .back { position: fixed; top: 18px; left: 18px; font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); opacity: 0.55; text-decoration: none; z-index: 100; transition: opacity 0.3s; }
+    .back:hover { opacity: 1; }
+
+    .screen { max-width: 480px; margin: 0 auto; padding: 64px 28px 100px; }
+
+    .step-dots { display: flex; gap: 10px; margin-bottom: 40px; padding-top: 8px; }
+    .dot { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--muted); }
+    .dot.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.1); box-shadow: 0 0 10px rgba(201,168,76,0.2); }
+    .dot.done { border-color: rgba(201,168,76,0.4); color: rgba(201,168,76,0.6); }
+
+    h1 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 34px; line-height: 1.2; color: var(--text); margin-bottom: 8px; }
+    .subtitle { font-size: 13px; color: var(--muted); line-height: 1.65; margin-bottom: 28px; }
+
+    /* Method grid */
+    .method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+    .method-btn {
+      padding: 16px; border-radius: 12px;
+      border: 1px solid var(--gold-dim);
+      background: rgba(255,255,255,0.04);
+      font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 400;
+      color: var(--muted); cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(12px);
+      text-align: center;
+    }
+    .method-btn.active {
+      border-color: rgba(201,168,76,0.5);
+      color: var(--gold);
+      background: rgba(201,168,76,0.08);
+      box-shadow: 0 0 16px rgba(201,168,76,0.08);
+    }
+    .method-btn:hover:not(.active) { border-color: rgba(201,168,76,0.3); color: var(--text); }
+
+    /* Info card */
+    .info-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--gold-dim);
+      border-radius: 14px;
+      padding: 22px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      backdrop-filter: blur(12px);
+    }
+    .info-icon { opacity: 0.4; flex-shrink: 0; margin-top: 2px; }
+    .info-title { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+    .info-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+    /* Success note */
+    .success-note {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(111,207,151,0.06);
+      border: 1px solid rgba(111,207,151,0.2);
+      border-radius: 10px; padding: 12px 16px;
+      margin-top: 14px;
+    }
+    .success-icon { color: #6FCF97; flex-shrink: 0; }
+    .success-text { font-size: 12px; color: rgba(111,207,151,0.85); }
+
+    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; padding: 16px 28px 32px; display: flex; justify-content: space-between; background: linear-gradient(to top, rgba(10,10,10,1) 60%, transparent); }
+    .back-btn { padding: 14px 24px; border: 1px solid var(--gold-dim); border-radius: 12px; background: transparent; font-family: 'Inter', sans-serif; font-size: 13px; color: var(--muted); cursor: pointer; transition: all 0.3s; }
+    .back-btn:hover { color: var(--text); border-color: rgba(201,168,76,0.4); }
+    .continue-btn { padding: 14px 32px; background: linear-gradient(135deg, rgba(201,168,76,0.85), rgba(201,168,76,0.6)); border: none; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; color: #0A0A0A; cursor: pointer; box-shadow: 0 0 20px rgba(201,168,76,0.2); transition: box-shadow 0.3s, transform 0.3s; }
+    .continue-btn:hover { box-shadow: 0 0 32px rgba(201,168,76,0.35); transform: translateY(-1px); }
+  </style>
+</head>
+<body>
+  <a href="/" class="back">← Gallery</a>
+  <div class="screen">
+    <div class="step-dots">
+      <div class="dot done">1</div>
+      <div class="dot done">2</div>
+      <div class="dot done">3</div>
+      <div class="dot active">4</div>
+      <div class="dot">5</div>
+      <div class="dot">6</div>
+      <div class="dot">7</div>
+    </div>
+
+    <h1>Design Her Look</h1>
+    <p class="subtitle">Give her a face, a style, a presence that matches the soul you've already built. This is purely visual — her personality stays exactly as you shaped it.</p>
+
+    <div class="method-grid">
+      <button class="method-btn" onclick="setMethod(this)">Generate Her Look</button>
+      <button class="method-btn" onclick="setMethod(this)">Upload a Photo</button>
+      <button class="method-btn" onclick="setMethod(this)">Choose from Library</button>
+      <button class="method-btn active" onclick="setMethod(this)">Skip for Now</button>
+    </div>
+
+    <div class="info-card">
+      <div class="info-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(232,224,208,0.6)" stroke-width="1.5">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+      </div>
+      <div>
+        <div class="info-title">Personality first. Looks later.</div>
+        <p class="info-desc">You can generate or upload her look anytime from the gallery or chat. Her personality doesn't depend on her appearance — this step is entirely optional.</p>
+        <div class="success-note">
+          <svg class="success-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="success-text">You can continue without designing a look</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="back-btn">Back</button>
+    <button class="continue-btn">Continue</button>
+  </div>
+
+  <script>
+    function setMethod(el) {
+      document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+    }
+  </script>
+</body>
+</html>

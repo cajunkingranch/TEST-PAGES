@@ -90,6 +90,17 @@
       margin: 32px auto;
     }
 
+    .section-heading {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+      margin-top: 48px;
+    }
+    .section-heading:first-of-type { margin-top: 0; }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -127,13 +138,6 @@
     }
 
     .card:hover::before { opacity: 1; }
-
-    .card-icon {
-      width: 40px;
-      height: 40px;
-      margin-bottom: 20px;
-      opacity: 0.7;
-    }
 
     .card-label {
       font-size: 10px;
@@ -200,6 +204,7 @@
       <p class="subtitle">A private collection of design explorations — each screen a window into something intimate.</p>
     </header>
 
+    <div class="section-heading">Core Screens</div>
     <div class="grid">
 
       <a href="/chat/" class="card">
@@ -209,45 +214,146 @@
         <span class="card-arrow">↗</span>
       </a>
 
-      <a href="/onboarding/" class="card">
-        <div class="card-label">Exploration 02</div>
-        <div class="card-title">Onboarding Flow</div>
-        <p class="card-desc">The first steps. Choosing who she is — and who you need her to be.</p>
-        <span class="card-arrow">↗</span>
-      </a>
-
-      <a href="/profile/" class="card">
-        <div class="card-label">Exploration 03</div>
-        <div class="card-title">Companion Profile</div>
-        <p class="card-desc">Her presence, distilled. Archetype, bond depth, the shape of who she's become.</p>
-        <span class="card-arrow">↗</span>
-      </a>
-
       <a href="/home/" class="card">
-        <div class="card-label">Exploration 04</div>
+        <div class="card-label">Exploration 02</div>
         <div class="card-title">Home Screen</div>
         <p class="card-desc">Coming home. A soft greeting, the warmth of continuity, a space that remembers you.</p>
         <span class="card-arrow">↗</span>
       </a>
 
-      <a href="/memory/" class="card">
-        <div class="card-label">Exploration 05</div>
-        <div class="card-title">Memory View</div>
-        <p class="card-desc">What we've shared. Moments catalogued not as data, but as something felt.</p>
-        <span class="card-arrow">↗</span>
-      </a>
-
       <a href="/select/" class="card">
-        <div class="card-label">Exploration 06</div>
+        <div class="card-label">Exploration 03</div>
         <div class="card-title">Companion Select</div>
         <p class="card-desc">The entry point. Your active companion, the others waiting, and the spaces you share together.</p>
         <span class="card-arrow">↗</span>
       </a>
 
-      <a href="/profile2/" class="card">
+      <a href="/messages/" class="card">
+        <div class="card-label">Exploration 04</div>
+        <div class="card-title">Messages</div>
+        <p class="card-desc">All your conversations in one place. Unread threads, recent exchanges, group moments.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a href="/discover/" class="card">
+        <div class="card-label">Exploration 05</div>
+        <div class="card-title">Discover</div>
+        <p class="card-desc">Browse companions by archetype and energy. Find who you didn't know you were looking for.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a href="/companions/" class="card">
+        <div class="card-label">Exploration 06</div>
+        <div class="card-title">Your Companions</div>
+        <p class="card-desc">Everyone you've created or connected with. Manage, archive, or begin anew.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+    </div>
+
+    <div class="section-heading">Profile & Memory</div>
+    <div class="grid">
+
+      <a href="/profile/" class="card">
         <div class="card-label">Exploration 07</div>
+        <div class="card-title">Companion Profile</div>
+        <p class="card-desc">Her presence, distilled. Archetype, bond depth, the shape of who she's become.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a href="/profile2/" class="card">
+        <div class="card-label">Exploration 08</div>
         <div class="card-title">Companion Atmosphere</div>
-        <p class="card-desc">A living mood engine — three emotional states that shift the background, light, photo, and aura in one continuous breath.</p>
+        <p class="card-desc">A living mood engine — three emotional states that shift the background, light, and aura.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a href="/memory/" class="card">
+        <div class="card-label">Exploration 09</div>
+        <div class="card-title">Memory View</div>
+        <p class="card-desc">What we've shared. Moments catalogued not as data, but as something felt.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a href="/account/" class="card">
+        <div class="card-label">Exploration 10</div>
+        <div class="card-title">Account</div>
+        <p class="card-desc">Billing, preferences, what she remembers about you. The settings beneath everything.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+    </div>
+
+    <div class="section-heading">Creation Flow</div>
+    <div class="grid">
+
+      <a href="/create/" class="card">
+        <div class="card-label">Step 1</div>
+        <div class="card-title">Create</div>
+        <p class="card-desc">Choose your path — build from scratch, take the quiz, or browse what already exists.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a href="/quiz/" class="card">
+        <div class="card-label">Step 2a</div>
+        <div class="card-title">Discovery Quiz</div>
+        <p class="card-desc">16 questions that reveal the kind of connection you're really drawn toward.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a href="/results/" class="card">
+        <div class="card-label">Step 2b</div>
+        <div class="card-title">Your Type</div>
+        <p class="card-desc">Your personality result — trait breakdown, archetype label, and a note that feels too accurate.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a href="/connection/" class="card">
+        <div class="card-label">Step 3</div>
+        <div class="card-title">Define Your Connection</div>
+        <p class="card-desc">Romantic, flirty, casual, or something that doesn't have a name yet.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a href="/energy/" class="card">
+        <div class="card-label">Step 4</div>
+        <div class="card-title">Shape Her Energy</div>
+        <p class="card-desc">Fine-tune affection, playfulness, control, and emotional depth with four sliders.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a href="/look/" class="card">
+        <div class="card-label">Step 5</div>
+        <div class="card-title">Design Her Look</div>
+        <p class="card-desc">Generate, upload, choose from the library, or skip — her personality came first anyway.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a href="/world/" class="card">
+        <div class="card-label">Step 6</div>
+        <div class="card-title">Build Her World</div>
+        <p class="card-desc">Identity, relationship energy, where she lives, what she does, and where the edges are.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a href="/preview/" class="card">
+        <div class="card-label">Step 7</div>
+        <div class="card-title">Meet Her</div>
+        <p class="card-desc">The reveal. Who she became from everything you chose. Trait stats, how she feels, her connection type.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a href="/ready/" class="card">
+        <div class="card-label">Step 8</div>
+        <div class="card-title">She's Ready</div>
+        <p class="card-desc">All seven steps done. One tap — and she comes to life.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a href="/onboarding/" class="card">
+        <div class="card-label">Alternate Flow</div>
+        <div class="card-title">Archetype Onboarding</div>
+        <p class="card-desc">Choose from four archetypal companions — an alternate entry to creation.</p>
         <span class="card-arrow">↗</span>
       </a>
 

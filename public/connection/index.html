@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NySa — Define Your Connection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --gold: #C9A84C; --gold-dim: rgba(201,168,76,0.22); --bg: #0A0A0A; --text: #E8E0D0; --muted: rgba(232,224,208,0.45); }
+    html, body { min-height: 100vh; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-weight: 300; }
+    body { background-image: radial-gradient(ellipse 80% 50% at 50% -5%, rgba(201,168,76,0.06) 0%, transparent 65%); }
+
+    .back { position: fixed; top: 18px; left: 18px; font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); opacity: 0.55; text-decoration: none; z-index: 100; transition: opacity 0.3s; }
+    .back:hover { opacity: 1; }
+
+    .screen { min-height: 100vh; max-width: 480px; margin: 0 auto; padding: 64px 28px 100px; display: flex; flex-direction: column; }
+
+    /* Step dots */
+    .step-dots { display: flex; gap: 10px; margin-bottom: 40px; padding-top: 8px; }
+    .dot { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--muted); }
+    .dot.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.1); box-shadow: 0 0 10px rgba(201,168,76,0.2); }
+    .dot.done { border-color: rgba(201,168,76,0.4); color: rgba(201,168,76,0.6); }
+
+    h1 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 34px; line-height: 1.2; color: var(--text); margin-bottom: 8px; }
+    .subtitle { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 32px; }
+
+    .connection-cards { display: flex; flex-direction: column; gap: 12px; flex: 1; }
+    .conn-card {
+      padding: 22px 22px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--gold-dim);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.35s ease;
+      backdrop-filter: blur(12px);
+    }
+    .conn-card.selected {
+      background: rgba(201,168,76,0.08);
+      border-color: rgba(201,168,76,0.5);
+      box-shadow: 0 0 24px rgba(201,168,76,0.08);
+    }
+    .conn-card:hover:not(.selected) { border-color: rgba(201,168,76,0.35); background: rgba(255,255,255,0.06); }
+    .conn-name { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--text); margin-bottom: 6px; }
+    .conn-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+    /* Bottom nav */
+    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; padding: 16px 28px 32px; display: flex; justify-content: space-between; background: linear-gradient(to top, rgba(10,10,10,1) 60%, transparent); }
+    .back-btn { padding: 14px 24px; border: 1px solid var(--gold-dim); border-radius: 12px; background: transparent; font-family: 'Inter', sans-serif; font-size: 13px; color: var(--muted); cursor: pointer; transition: all 0.3s; }
+    .back-btn:hover { color: var(--text); border-color: rgba(201,168,76,0.4); }
+    .continue-btn { padding: 14px 32px; background: linear-gradient(135deg, rgba(201,168,76,0.85), rgba(201,168,76,0.6)); border: none; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; color: #0A0A0A; cursor: pointer; box-shadow: 0 0 20px rgba(201,168,76,0.2); transition: box-shadow 0.3s, transform 0.3s; }
+    .continue-btn:hover { box-shadow: 0 0 32px rgba(201,168,76,0.35); transform: translateY(-1px); }
+  </style>
+</head>
+<body>
+  <a href="/" class="back">← Gallery</a>
+  <div class="screen">
+    <div class="step-dots">
+      <div class="dot done">1</div>
+      <div class="dot active">2</div>
+      <div class="dot">3</div>
+      <div class="dot">4</div>
+      <div class="dot">5</div>
+      <div class="dot">6</div>
+      <div class="dot">7</div>
+    </div>
+
+    <h1>Define Your Connection</h1>
+    <p class="subtitle">What kind of energy do you want between you? This sets the emotional tone from the very first message.</p>
+
+    <div class="connection-cards">
+      <div class="conn-card selected" onclick="selectConn(this)">
+        <div class="conn-name">Romantic</div>
+        <p class="conn-desc">A deep emotional bond built on exclusivity, trust, and growing together over time.</p>
+      </div>
+      <div class="conn-card" onclick="selectConn(this)">
+        <div class="conn-name">Flirty</div>
+        <p class="conn-desc">Playful chemistry, teasing tension, and magnetic attraction without heavy expectations.</p>
+      </div>
+      <div class="conn-card" onclick="selectConn(this)">
+        <div class="conn-name">Casual</div>
+        <p class="conn-desc">Easy, low-pressure connection. Comfortable silences, no labels, just vibes.</p>
+      </div>
+      <div class="conn-card" onclick="selectConn(this)">
+        <div class="conn-name">Open Flame</div>
+        <p class="conn-desc">Uninhibited, present-tense energy. No strings, no filters, just raw connection.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="back-btn">Back</button>
+    <button class="continue-btn">Continue</button>
+  </div>
+
+  <script>
+    function selectConn(el) {
+      document.querySelectorAll('.conn-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+  </script>
+</body>
+</html>

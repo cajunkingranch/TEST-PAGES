@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NySa — Discover Your Type</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --gold: #C9A84C; --gold-dim: rgba(201,168,76,0.22); --bg: #0A0A0A; --text: #E8E0D0; --muted: rgba(232,224,208,0.45); }
+    html, body { min-height: 100vh; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-weight: 300; }
+    body { background-image: radial-gradient(ellipse 80% 50% at 50% -5%, rgba(201,168,76,0.06) 0%, transparent 65%); }
+
+    .back { position: fixed; top: 18px; left: 18px; font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); opacity: 0.55; text-decoration: none; z-index: 100; transition: opacity 0.3s; }
+    .back:hover { opacity: 1; }
+
+    .screen { min-height: 100vh; max-width: 480px; margin: 0 auto; padding: 64px 28px 56px; display: flex; flex-direction: column; }
+
+    /* Progress bar */
+    .progress-wrap { margin-bottom: 36px; padding-top: 10px; }
+    .progress-track { height: 2px; background: rgba(255,255,255,0.07); border-radius: 2px; position: relative; margin-bottom: 12px; }
+    .progress-fill { height: 100%; width: 6.25%; background: var(--gold); border-radius: 2px; box-shadow: 0 0 8px rgba(201,168,76,0.4); }
+    .progress-meta { display: flex; justify-content: space-between; align-items: center; }
+    .brand-small { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); opacity: 0.6; }
+    .question-count { font-size: 10px; letter-spacing: 0.15em; color: var(--muted); }
+
+    .step-nav { display: flex; align-items: center; gap: 8px; margin-bottom: 40px; }
+    .back-link { font-size: 11px; color: var(--muted); letter-spacing: 0.08em; cursor: pointer; transition: color 0.3s; }
+    .back-link:hover { color: var(--text); }
+
+    .category-tag { font-size: 9px; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); opacity: 0.65; margin-bottom: 8px; }
+    .question-label { font-size: 9px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+
+    h1 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(26px, 6vw, 34px); line-height: 1.25; color: var(--text); margin-bottom: 36px; }
+
+    .options { display: flex; flex-direction: column; gap: 12px; flex: 1; }
+    .option {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 18px 20px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--gold-dim);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.35s ease;
+      backdrop-filter: blur(12px);
+    }
+    .option:hover, .option.selected {
+      background: rgba(201,168,76,0.07);
+      border-color: rgba(201,168,76,0.45);
+      transform: translateX(3px);
+    }
+    .option.selected { box-shadow: 0 0 20px rgba(201,168,76,0.08); }
+
+    .radio {
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.18);
+      flex-shrink: 0; margin-top: 1px;
+      position: relative; transition: border-color 0.3s;
+    }
+    .option.selected .radio {
+      border-color: var(--gold);
+      box-shadow: 0 0 8px rgba(201,168,76,0.4);
+    }
+    .option.selected .radio::after {
+      content: ''; position: absolute; inset: 4px;
+      border-radius: 50%; background: var(--gold);
+    }
+    .option-text { font-size: 14px; color: var(--text); line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <a href="/" class="back">← Gallery</a>
+  <div class="screen">
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <div class="progress-meta">
+        <span class="brand-small">NySa FloW AI</span>
+        <span class="question-count">Question 1 of 16</span>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <span class="back-link">← Back</span>
+    </div>
+
+    <div class="category-tag">Emotional Pace</div>
+    <div class="question-label">Question 1 of 16</div>
+
+    <h1>You're getting to know someone new. What feels most attractive?</h1>
+
+    <div class="options">
+      <div class="option selected" onclick="select(this)">
+        <div class="radio"></div>
+        <div class="option-text">She's cautious at first, but when she opens up it hits different</div>
+      </div>
+      <div class="option" onclick="select(this)">
+        <div class="radio"></div>
+        <div class="option-text">She's warm and direct from the start — no games</div>
+      </div>
+      <div class="option" onclick="select(this)">
+        <div class="radio"></div>
+        <div class="option-text">She's hard to read at first and you have to earn her attention</div>
+      </div>
+      <div class="option" onclick="select(this)">
+        <div class="radio"></div>
+        <div class="option-text">She's fun and easy to talk to immediately — zero awkwardness</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function select(el) {
+      document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+  </script>
+</body>
+</html>
