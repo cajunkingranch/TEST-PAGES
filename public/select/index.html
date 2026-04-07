@@ -70,6 +70,43 @@
       box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px var(--gold-dim);
     }
 
+    /* Vignette — dark-edge pull, draws eye to center */
+    .hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 65% 70% at 50% 42%,
+        transparent 28%, rgba(10,10,10,0.45) 62%, rgba(10,10,10,0.82) 100%);
+      border-radius: inherit;
+      pointer-events: none; z-index: 4;
+    }
+
+    /* Warm light source — emanates from the figure */
+    .hero-light {
+      position: absolute; bottom: 26%; left: 50%;
+      transform: translateX(-50%);
+      width: 220px; height: 300px;
+      background: radial-gradient(ellipse at 50% 38%,
+        rgba(201,168,76,0.14) 0%,
+        rgba(212,160,160,0.07) 42%,
+        transparent 72%);
+      filter: blur(22px);
+      animation: heatBreath 5.5s ease-in-out infinite;
+      pointer-events: none; z-index: 2;
+    }
+    @keyframes heatBreath {
+      0%,100% { opacity: 0.65; transform: translateX(-50%) scale(1); }
+      50%      { opacity: 1;   transform: translateX(-50%) scale(1.1); }
+    }
+
+    /* Film grain */
+    .hero-grain {
+      position: absolute; inset: 0;
+      border-radius: inherit;
+      filter: url(#grain-filter);
+      opacity: 0.022;
+      pointer-events: none; z-index: 4;
+    }
+
     /* Hero photo */
     .hero-img {
       position: absolute; inset: 0;
@@ -259,18 +296,20 @@
     /* Companion info overlay on hero */
     .hero-info {
       position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 0 22px 20px;
+      bottom: 0; left: 0; right: 0;
+      padding: 24px 22px 22px;
       z-index: 5;
+      background: linear-gradient(to top,
+        rgba(10,10,10,0.78) 0%,
+        rgba(10,10,10,0.32) 60%,
+        transparent 100%);
     }
 
     .status-line {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-bottom: 8px;
+      margin-bottom: 0;
     }
 
     .status-dot {
@@ -296,6 +335,13 @@
       opacity: 0.85;
     }
 
+    /* Gold separator between status and name */
+    .hero-sep {
+      width: 48px; height: 1px; border-radius: 1px;
+      background: linear-gradient(90deg, rgba(201,168,76,0.6), transparent);
+      margin: 10px 0 12px;
+    }
+
     .companion-row {
       display: flex;
       align-items: center;
@@ -312,20 +358,12 @@
       color: var(--text);
     }
 
-    .notif-badge {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: var(--gold);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: 500;
-      color: #0A0A0A;
-      box-shadow: 0 0 12px rgba(201,168,76,0.5);
-      flex-shrink: 0;
-      margin-bottom: 4px;
+    /* Editorial new-message pip — replaces circle badge */
+    .new-pip {
+      width: 28px; height: 3px; border-radius: 2px;
+      background: linear-gradient(90deg, var(--gold), rgba(201,168,76,0.38));
+      box-shadow: 0 0 8px rgba(201,168,76,0.5);
+      align-self: center; flex-shrink: 0;
     }
 
     .companion-tagline {
@@ -579,18 +617,12 @@
       letter-spacing: 0.05em;
     }
 
-    .group-unread {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, rgba(201,168,76,0.9), rgba(201,168,76,0.6));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 500;
-      color: #0A0A0A;
-      box-shadow: 0 0 8px rgba(201,168,76,0.4);
+    /* Editorial unread count — italic Cormorant numeral, no container */
+    .unread-count {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 19px; font-weight: 300; font-style: italic;
+      color: rgba(201,168,76,0.72);
+      letter-spacing: 0.04em; line-height: 1;
     }
 
     /* Dots menu */
@@ -615,6 +647,14 @@
   </style>
 </head>
 <body>
+  <!-- Grain filter definition -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <filter id="grain-filter" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="4" stitchTiles="stitch" result="noise"/>
+      <feBlend in="SourceGraphic" in2="noise" mode="overlay"/>
+    </filter>
+  </svg>
+
   <a href="/" class="back">← Gallery</a>
 
   <div class="page">
@@ -622,6 +662,7 @@
     <!-- ── HERO ── -->
     <div class="hero">
       <div class="hero-art"></div>
+      <div class="hero-light"></div>
 
       <img class="hero-img" src="/profile/nysa1.jpg" alt="Jen" />
       <div class="portrait-wrap">
@@ -629,6 +670,7 @@
       </div>
 
       <div class="hero-fade"></div>
+      <div class="hero-grain"></div>
 
       <!-- Top bar -->
       <div class="hero-topbar">
@@ -653,9 +695,10 @@
           <div class="status-dot"></div>
           <span class="status-text">Thinking about you</span>
         </div>
+        <div class="hero-sep"></div>
         <div class="companion-row">
           <span class="companion-name">Jen</span>
-          <div class="notif-badge">1</div>
+          <div class="new-pip"></div>
         </div>
         <p class="companion-tagline">Expressive, flirt-forward, and hard to ignore.</p>
       </div>
@@ -731,7 +774,7 @@
           </div>
           <div class="group-meta">
             <span class="group-time">11:42 pm</span>
-            <div class="group-unread">3</div>
+            <span class="unread-count">3</span>
           </div>
         </div>
 
