@@ -110,13 +110,13 @@ const CompanionSelect = () => {
         /* ==================== KEYFRAMES ==================== */
 
         @keyframes atm-select-breathe {
-          0%, 100% { transform: scale(1); opacity: 0.10; }
-          50% { transform: scale(1.06); opacity: 0.14; }
+          0%, 100% { transform: scale(1); opacity: 0.18; }
+          50% { transform: scale(1.06); opacity: 0.28; }
         }
 
         @keyframes atm-select-breathe-alt {
-          0%, 100% { transform: scale(1.02); opacity: 0.08; }
-          50% { transform: scale(0.96); opacity: 0.12; }
+          0%, 100% { transform: scale(1.02); opacity: 0.16; }
+          50% { transform: scale(0.96); opacity: 0.24; }
         }
 
         @keyframes atm-select-bloom-drift-1 {
@@ -164,6 +164,10 @@ const CompanionSelect = () => {
           min-height: 100vh;
           width: 100%;
           background: #0D0F0D;
+          background-image:
+            radial-gradient(ellipse 80% 60% at 50% 0%, rgba(27,38,27,0.25) 0%, transparent 65%),
+            radial-gradient(ellipse 60% 50% at 80% 100%, rgba(27,38,27,0.15) 0%, transparent 55%),
+            radial-gradient(ellipse 50% 40% at 10% 50%, rgba(205,127,50,0.04) 0%, transparent 50%);
           overflow-x: hidden;
           overflow-y: auto;
           display: flex;
@@ -195,7 +199,8 @@ const CompanionSelect = () => {
           height: 420px;
           top: -5%;
           left: 15%;
-          filter: blur(120px);
+          filter: blur(90px);
+          opacity: 0.22;
           animation: atm-select-breathe 4s ease-in-out infinite, atm-select-bloom-drift-1 20s ease-in-out infinite;
         }
 
@@ -204,7 +209,8 @@ const CompanionSelect = () => {
           height: 500px;
           top: 30%;
           right: -8%;
-          filter: blur(140px);
+          filter: blur(90px);
+          opacity: 0.20;
           animation: atm-select-breathe-alt 4s ease-in-out infinite 1s, atm-select-bloom-drift-2 24s ease-in-out infinite;
         }
 
@@ -213,7 +219,8 @@ const CompanionSelect = () => {
           height: 380px;
           bottom: 5%;
           left: -5%;
-          filter: blur(110px);
+          filter: blur(90px);
+          opacity: 0.20;
           animation: atm-select-breathe 4s ease-in-out infinite 2s, atm-select-bloom-drift-3 18s ease-in-out infinite;
         }
 
@@ -222,7 +229,8 @@ const CompanionSelect = () => {
           height: 340px;
           top: 55%;
           left: 45%;
-          filter: blur(130px);
+          filter: blur(90px);
+          opacity: 0.18;
           animation: atm-select-breathe-alt 4s ease-in-out infinite 0.5s, atm-select-bloom-drift-1 22s ease-in-out infinite;
         }
 
@@ -370,13 +378,19 @@ const CompanionSelect = () => {
         .atm-select-hero-overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(
-            180deg,
-            rgba(13, 15, 13, 0.15) 0%,
-            rgba(13, 15, 13, 0.0) 30%,
-            rgba(13, 15, 13, 0.5) 65%,
-            rgba(13, 15, 13, 0.92) 100%
-          );
+          background:
+            linear-gradient(
+              180deg,
+              rgba(27, 38, 27, 0.15) 0%,
+              rgba(13, 15, 13, 0.0) 30%,
+              rgba(13, 15, 13, 0.5) 65%,
+              rgba(13, 15, 13, 0.92) 100%
+            ),
+            linear-gradient(
+              0deg,
+              transparent 0%,
+              rgba(27, 38, 27, 0.15) 100%
+            );
           pointer-events: none;
         }
 
@@ -451,7 +465,7 @@ const CompanionSelect = () => {
           font-size: 10px;
           letter-spacing: 0.1em;
           text-transform: uppercase;
-          color: rgba(205, 127, 50, 0.5);
+          color: rgba(205, 127, 50, 0.7);
         }
 
         /* ==================== SECTION LABELS ==================== */
@@ -462,7 +476,7 @@ const CompanionSelect = () => {
           font-size: 10px;
           letter-spacing: 0.15em;
           text-transform: uppercase;
-          color: rgba(205, 127, 50, 0.45);
+          color: rgba(205, 127, 50, 0.65);
           margin-bottom: 18px;
           padding-left: 4px;
         }
@@ -571,7 +585,7 @@ const CompanionSelect = () => {
           font-size: 9px;
           letter-spacing: 0.12em;
           text-transform: uppercase;
-          color: rgba(205, 127, 50, 0.35);
+          color: rgba(205, 127, 50, 0.6);
           text-align: center;
           margin-top: -4px;
           transition: color 0.4s ease;
@@ -798,7 +812,7 @@ const CompanionSelect = () => {
       <div className="atm-select-bloom-layer">
         <motion.div
           className="atm-select-bloom atm-select-bloom--1"
-          animate={{ scale: [1, 1.06, 1], opacity: [0.1, 0.14, 0.1] }}
+          animate={{ scale: [1, 1.06, 1], opacity: [0.18, 0.28, 0.18] }}
           transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity }}
           style={{
             background: `radial-gradient(circle, ${activeBloomColor} 0%, transparent 70%)`,
@@ -807,7 +821,7 @@ const CompanionSelect = () => {
         />
         <motion.div
           className="atm-select-bloom atm-select-bloom--2"
-          animate={{ scale: [1.02, 0.96, 1.02], opacity: [0.08, 0.12, 0.08] }}
+          animate={{ scale: [1.02, 0.96, 1.02], opacity: [0.16, 0.24, 0.16] }}
           transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity, delay: 1 }}
           style={{
             background: `radial-gradient(circle, ${activeBloomColor} 0%, transparent 70%)`,
@@ -816,7 +830,7 @@ const CompanionSelect = () => {
         />
         <motion.div
           className="atm-select-bloom atm-select-bloom--3"
-          animate={{ scale: [1, 1.04, 1], opacity: [0.1, 0.13, 0.1] }}
+          animate={{ scale: [1, 1.04, 1], opacity: [0.18, 0.26, 0.18] }}
           transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity, delay: 2 }}
           style={{
             background: `radial-gradient(circle, ${activeBloomColor} 0%, transparent 70%)`,
@@ -825,7 +839,7 @@ const CompanionSelect = () => {
         />
         <motion.div
           className="atm-select-bloom atm-select-bloom--4"
-          animate={{ scale: [1, 0.97, 1], opacity: [0.06, 0.1, 0.06] }}
+          animate={{ scale: [1, 0.97, 1], opacity: [0.14, 0.22, 0.14] }}
           transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity, delay: 0.5 }}
           style={{
             background: `radial-gradient(circle, ${activeBloomColor} 0%, transparent 70%)`,

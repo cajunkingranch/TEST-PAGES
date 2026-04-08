@@ -103,13 +103,13 @@ const CompanionProfile = () => {
         }
 
         @keyframes atm-profile-glow-pulse {
-          0%, 100% { opacity: 0.35; }
-          50% { opacity: 0.6; }
+          0%, 100% { opacity: 0.5; }
+          50% { opacity: 0.8; }
         }
 
         @keyframes atm-profile-terminus-pulse {
-          0%, 100% { opacity: 0.6; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.3); }
+          0%, 100% { opacity: 0.7; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.4); }
         }
 
         @keyframes atm-profile-shimmer {
@@ -155,6 +155,10 @@ const CompanionProfile = () => {
           min-height: 100vh;
           width: 100%;
           background: #0D0C0B;
+          background-image:
+            radial-gradient(ellipse 80% 60% at 50% 20%, rgba(38,33,28,0.3) 0%, transparent 65%),
+            radial-gradient(ellipse 60% 50% at 20% 80%, rgba(38,33,28,0.2) 0%, transparent 55%),
+            radial-gradient(ellipse 50% 40% at 80% 60%, rgba(197,160,125,0.04) 0%, transparent 50%);
           overflow-x: hidden;
           overflow-y: auto;
           display: flex;
@@ -177,8 +181,9 @@ const CompanionProfile = () => {
           top: 8%;
           left: 50%;
           margin-left: -210px;
-          background: radial-gradient(circle, rgba(38, 33, 28, 0.12) 0%, rgba(38, 33, 28, 0.04) 50%, transparent 70%);
-          filter: blur(110px);
+          background: radial-gradient(circle, rgba(38, 33, 28, 0.55) 0%, rgba(38, 33, 28, 0.25) 50%, transparent 70%);
+          filter: blur(70px);
+          opacity: 0.85;
           animation: atm-profile-bloom-drift-1 18s ease-in-out infinite;
         }
 
@@ -187,8 +192,9 @@ const CompanionProfile = () => {
           height: 500px;
           bottom: -8%;
           left: -6%;
-          background: radial-gradient(circle, rgba(38, 33, 28, 0.10) 0%, rgba(38, 33, 28, 0.03) 50%, transparent 70%);
-          filter: blur(120px);
+          background: radial-gradient(circle, rgba(38, 33, 28, 0.5) 0%, rgba(38, 33, 28, 0.2) 50%, transparent 70%);
+          filter: blur(75px);
+          opacity: 0.8;
           animation: atm-profile-bloom-drift-2 22s ease-in-out infinite;
         }
 
@@ -277,7 +283,7 @@ const CompanionProfile = () => {
           position: absolute;
           inset: -16px;
           border-radius: 50%;
-          background: radial-gradient(circle, transparent 48%, rgba(197, 160, 125, 0.06) 58%, rgba(197, 160, 125, 0.03) 68%, transparent 78%);
+          background: radial-gradient(circle, transparent 48%, rgba(197, 160, 125, 0.3) 58%, rgba(197, 160, 125, 0.15) 68%, transparent 78%);
           animation: atm-profile-breathe 4s ease-in-out infinite;
           pointer-events: none;
         }
@@ -287,7 +293,7 @@ const CompanionProfile = () => {
           position: absolute;
           inset: -6px;
           border-radius: 50%;
-          background: radial-gradient(circle, transparent 52%, rgba(197, 160, 125, 0.08) 62%, rgba(197, 160, 125, 0.02) 72%, transparent 82%);
+          background: radial-gradient(circle, transparent 52%, rgba(197, 160, 125, 0.32) 62%, rgba(197, 160, 125, 0.12) 72%, transparent 82%);
           animation: atm-profile-breathe 4s ease-in-out infinite 0.3s;
           pointer-events: none;
         }
@@ -299,7 +305,7 @@ const CompanionProfile = () => {
           height: 180px;
           border-radius: 50%;
           overflow: hidden;
-          box-shadow: 0 0 60px rgba(197, 160, 125, 0.06), 0 0 120px rgba(13, 12, 11, 0.8);
+          box-shadow: 0 0 60px rgba(197, 160, 125, 0.25), 0 0 120px rgba(13, 12, 11, 0.8);
         }
 
         .atm-profile-orb-photo {
@@ -345,7 +351,7 @@ const CompanionProfile = () => {
           font-weight: 300;
           font-style: italic;
           font-size: 16px;
-          color: rgba(197, 160, 125, 0.5);
+          color: rgba(197, 160, 125, 0.6);
           letter-spacing: 0.04em;
         }
 
@@ -417,7 +423,7 @@ const CompanionProfile = () => {
           font-size: 9px;
           letter-spacing: 0.15em;
           text-transform: uppercase;
-          color: rgba(197, 160, 125, 0.45);
+          color: rgba(197, 160, 125, 0.65);
         }
 
         /* ==================== BOND DEPTH ==================== */
@@ -437,7 +443,7 @@ const CompanionProfile = () => {
           font-size: 9px;
           letter-spacing: 0.15em;
           text-transform: uppercase;
-          color: rgba(197, 160, 125, 0.4);
+          color: rgba(197, 160, 125, 0.65);
           margin-bottom: 14px;
         }
 
@@ -446,7 +452,7 @@ const CompanionProfile = () => {
           font-weight: 300;
           font-style: italic;
           font-size: 15px;
-          color: rgba(197, 160, 125, 0.55);
+          color: rgba(197, 160, 125, 0.65);
           letter-spacing: 0.03em;
           margin-bottom: 24px;
           text-align: center;
@@ -469,8 +475,8 @@ const CompanionProfile = () => {
           height: 100%;
           width: 63%;
           border-radius: 2px;
-          background: linear-gradient(90deg, rgba(197, 160, 125, 0.08) 0%, rgba(197, 160, 125, 0.3) 70%, rgba(197, 160, 125, 0.45) 100%);
-          box-shadow: 0 0 18px rgba(197, 160, 125, 0.12), 0 0 40px rgba(197, 160, 125, 0.06);
+          background: linear-gradient(90deg, rgba(197, 160, 125, 0.15) 0%, rgba(197, 160, 125, 0.5) 70%, rgba(197, 160, 125, 0.7) 100%);
+          box-shadow: 0 0 18px rgba(197, 160, 125, 0.25), 0 0 40px rgba(197, 160, 125, 0.12);
         }
 
         /* Blurred ambient glow behind the trail */
@@ -515,7 +521,7 @@ const CompanionProfile = () => {
           font-size: 15px;
           letter-spacing: 0.12em;
           color: rgba(197, 160, 125, 0.7);
-          border: 1px solid rgba(197, 160, 125, 0.25);
+          border: 1px solid rgba(197, 160, 125, 0.4);
           border-radius: 60px;
           padding: 15px 48px;
           background: transparent;
