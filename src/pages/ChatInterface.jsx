@@ -155,7 +155,11 @@ export default function ChatInterface() {
         .atm-chat-root {
           position: fixed;
           inset: 0;
-          background: ${PALETTE.base};
+          background: #0A0909;
+          background-image:
+            radial-gradient(ellipse 80% 60% at 50% 0%, rgba(74,14,14,0.2) 0%, transparent 65%),
+            radial-gradient(ellipse 60% 50% at 80% 100%, rgba(74,14,14,0.12) 0%, transparent 55%),
+            radial-gradient(ellipse 50% 40% at 10% 50%, rgba(226,180,180,0.03) 0%, transparent 50%);
           display: flex;
           flex-direction: column;
           overflow: hidden;
@@ -179,7 +183,7 @@ export default function ChatInterface() {
         .atm-chat-bloom {
           position: absolute;
           border-radius: 50%;
-          filter: blur(120px);
+          filter: blur(85px);
           transition: opacity 1.5s ease, transform 1.5s ease;
           will-change: opacity, transform;
         }
@@ -191,10 +195,10 @@ export default function ChatInterface() {
           top: -80px;
           left: -120px;
           background: radial-gradient(circle, ${PALETTE.garnet} 0%, transparent 70%);
-          opacity: 0.08;
+          opacity: 0.18;
         }
         .atm-chat-bloom--1.atm-chat-bloom--active {
-          opacity: 0.15;
+          opacity: 0.28;
           transform: scale(1.06);
         }
 
@@ -205,10 +209,10 @@ export default function ChatInterface() {
           bottom: 60px;
           right: -100px;
           background: radial-gradient(circle, ${PALETTE.garnet} 0%, transparent 70%);
-          opacity: 0.06;
+          opacity: 0.15;
         }
         .atm-chat-bloom--2.atm-chat-bloom--active {
-          opacity: 0.13;
+          opacity: 0.25;
           transform: scale(1.08);
         }
 
@@ -220,10 +224,10 @@ export default function ChatInterface() {
           left: 30%;
           transform: translate(-50%, -50%);
           background: radial-gradient(circle, ${PALETTE.garnet} 0%, transparent 65%);
-          opacity: 0.05;
+          opacity: 0.15;
         }
         .atm-chat-bloom--3.atm-chat-bloom--active {
-          opacity: 0.12;
+          opacity: 0.22;
           transform: translate(-50%, -50%) scale(1.04);
         }
 
@@ -428,9 +432,9 @@ export default function ChatInterface() {
           font-weight: 400;
           line-height: 1.65;
           color: ${PALETTE.offWhite};
-          background: rgba(74, 14, 14, 0.08);
+          background: rgba(74, 14, 14, 0.14);
           border: 0.5px solid rgba(226, 180, 180, 0.15);
-          border-left: 2px solid rgba(226, 180, 180, 0.3);
+          border-left: 2px solid rgba(226, 180, 180, 0.45);
           border-radius: 4px 16px 16px 16px;
           padding: 14px 18px;
         }
@@ -483,8 +487,8 @@ export default function ChatInterface() {
           width: 5px;
           height: 5px;
           border-radius: 50%;
-          background: ${PALETTE.roseCopper};
-          opacity: 0.5;
+          background: #E2B4B4;
+          opacity: 0.7;
         }
 
         /* ================================================================
@@ -538,7 +542,7 @@ export default function ChatInterface() {
           font-weight: 300;
         }
         .atm-chat-input-field:focus {
-          border-color: rgba(226, 180, 180, 0.22);
+          border-color: rgba(226, 180, 180, 0.45);
           background: rgba(226, 180, 180, 0.06);
         }
 
@@ -553,11 +557,11 @@ export default function ChatInterface() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: linear-gradient(135deg, rgba(226, 180, 180, 0.2) 0%, rgba(226, 180, 180, 0.1) 100%);
+          background: linear-gradient(135deg, rgba(226, 180, 180, 0.9) 0%, rgba(226, 180, 180, 0.6) 100%);
           transition: background 0.3s ease, transform 0.2s ease;
         }
         .atm-chat-send-btn:hover {
-          background: linear-gradient(135deg, rgba(226, 180, 180, 0.3) 0%, rgba(226, 180, 180, 0.15) 100%);
+          background: linear-gradient(135deg, rgba(226, 180, 180, 1) 0%, rgba(226, 180, 180, 0.75) 100%);
           transform: scale(1.04);
         }
         .atm-chat-send-btn:active {
@@ -566,7 +570,7 @@ export default function ChatInterface() {
         .atm-chat-send-btn svg {
           width: 18px;
           height: 18px;
-          stroke: ${PALETTE.roseCopper};
+          stroke: ${PALETTE.base};
           stroke-width: 1.5;
           fill: none;
         }
